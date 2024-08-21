@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database');
 const User = require('.//../models/User');
+const userRoutes = require('./routes/userRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+
+// Routes
+app.use('/api/users', userRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
@@ -28,7 +33,7 @@ sequelize.sync()
 // CRUD Operations for Users
 
 // 1. Create User (POST /users)
-app.post('/users', async (req, res) => {
+app.post('/api/users/register', async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const newUser = await User.create({ name, email, password });
