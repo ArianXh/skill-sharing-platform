@@ -9,10 +9,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+
+// Middleware
 app.use(express.json());
 
 
-// Routes
+// Mount User Routes
 app.use('/api/users', userRoutes);
 
 // Basic route
@@ -43,6 +45,7 @@ app.post('/api/users/register', async (req, res) => {
         res.status(500).json({ error: 'Error creating user' });
     }
 });
+
 
 // 2. Get All Users (GET /users)
 app.get('/users', async (req, res) => {
