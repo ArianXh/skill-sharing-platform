@@ -35,9 +35,17 @@ function LoginForm() {
         email: '',
         password: ''
       });
-      navigate('/dashboard'); // Or the route we create
-
       // Optionally redirect or update UI after successful login
+      navigate('/dashboard'); // Or the route we create
+      
+      /* Maybe later I'm going to need to update to this: 
+      if (user.role === 'admin') {
+        navigate('/admin-dashboard');
+      } 
+      else {
+            navigate('/user-dashboard');
+        }
+      */
     } catch (err) {
       setError(err.response.data.message || 'Invalid credentials');
       setSuccess('');
