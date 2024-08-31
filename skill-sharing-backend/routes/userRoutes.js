@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
         */
-
+        
         // Has the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(user.password, salt);
@@ -47,7 +47,6 @@ router.post('/login', async (req, res) => {
                 email: user.email,
             },
         };
-
         // Sign the JWT and send it to the client
         jwt.sign(
             payload,
@@ -58,7 +57,6 @@ router.post('/login', async (req, res) => {
                 res.json({ token });
             }
         );
-
     } catch (error) {
         console.error('Login Error:', error.message);
         res.status(500).json({ error: 'Server error' });

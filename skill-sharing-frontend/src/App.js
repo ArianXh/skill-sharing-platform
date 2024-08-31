@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import ProfilePage from './pages/ProfilePage';
 import SignUpForm from './components/SignUpForm';
 import LoginForm from './components/LoginForm';
+import UserDashboard from './pages/UserDashboard';
 import './index.css';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
         <Route path='profile' element={< ProfilePage /> } />
         <Route path='/signup' element={< SignUpForm />} />
         <Route path='/login' element={< LoginForm />} />
+        <Route path='/dashboard' element={< UserDashboard />} />
       </Routes>
     </Router>
   );

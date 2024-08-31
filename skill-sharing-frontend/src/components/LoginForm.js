@@ -2,15 +2,16 @@
 
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +31,11 @@ function LoginForm() {
       localStorage.setItem('token', response.data.token);
       setSuccess('Login successful!');
       setError('');
+      setFormData({
+        email: '',
+        password: ''
+      });
+      navigate('/dashboard'); // Or the route we create
 
       // Optionally redirect or update UI after successful login
     } catch (err) {
