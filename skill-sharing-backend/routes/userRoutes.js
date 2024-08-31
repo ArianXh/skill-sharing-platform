@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authMiddleware = require('..//authMiddleware');
+const authMiddleware = require('../authMiddleware');
 const pool = require('../config/database');
 const router = express.Router();
 
@@ -113,6 +113,34 @@ router.get('/profile', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+
+// Update User Profile
+// Allows the user to update their profile information like name or email.
+
+router.put('/profile', authMiddleware, async (req, res) => {
+    try {
+        const userId = req.user.id; // `req.user` is populated by `authMiddleware`
+        const { name, email } = req.body;
+
+        const user = await User.findByPk(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+
+        await user.save();
+
+        res.json(user);
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
+});
+
 
 
 
