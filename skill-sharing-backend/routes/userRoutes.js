@@ -5,7 +5,8 @@ const authMiddleware = require('../authMiddleware');
 const pool = require('../config/database');
 const router = express.Router();
 
-const User = require('..//..//models/User')
+const User = require('..//..//models/User');
+const Skills = require('../../models/Skills');
 
 
 // User Login
@@ -68,7 +69,6 @@ router.post('/login', async (req, res) => {
 // Register a New User
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
-
     try {
         // Check if the user already exists
         const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -101,8 +101,14 @@ router.post('/signup', async (req, res) => {
 router.get('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id;
-        const user = await User.findByPk(userId, { attributes: ['id', 'name', 'email'] });
-        
+        const user = await User.findByPk(userId, {
+             attributes: ['id', 'name', 'email'],
+             include: [{
+                model: Skills,
+                as: 'skills',
+                attributes: ['id', 'user_id', 'title', 'description', 'price'],
+             }] });
+        //const skills = await Skills.findAll({where: {userId}})
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }

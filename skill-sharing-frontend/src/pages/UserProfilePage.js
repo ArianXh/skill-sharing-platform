@@ -29,6 +29,16 @@ const UserProfilePage = () => {
       <h2>User Profile</h2>
       <p><strong>Name: </strong> {user.name}</p>
       <p><strong>Email: </strong> {user.email}</p>
+      <h2>Skills</h2>
+      {user.skills && user.skills.length > 0 ? (
+        <ul>
+          {user.skills.map(skill => (
+            <li key = {skill.id}>{skill.title}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No skills listed.</p>
+      )}
     </div>
   )
 }

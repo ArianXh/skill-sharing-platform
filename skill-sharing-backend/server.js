@@ -3,6 +3,7 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const User = require('.//../models/User');
 const userRoutes = require('./routes/userRoutes');
+const skillRoutes = require('./routes/skillRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // Mount User Routes
 app.use('/api/users', userRoutes);
+//app.use('/api/skills', skillRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

@@ -22,7 +22,12 @@ const User = sequelize.define('User', {
   },
 }, {
   tableName: 'users',  // Match the table name in your schema
+  modelName: 'User',
   timestamps: false,    // Disable automatic timestamp fields (createdAt, updatedAt)
 });
+
+
+// Defining the relationship with Skill
+User.hasMany(require('./Skills'), { foreignKey: 'user_id', as: 'skills' });
 
 module.exports = User;
