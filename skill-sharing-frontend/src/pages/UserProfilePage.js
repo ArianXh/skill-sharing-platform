@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const UserProfilePage = () => {
   const [user, setUser] = useState({name: '', email: ''});
+  const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -14,8 +15,10 @@ const UserProfilePage = () => {
           },
         });
         setUser(response.data);
+        setLoading(false); // Stop loading once data is fetched
       } catch(error){
         console.error('Error fetching profile: ', error);
+        setLoading(false); // Stop loading even if there's an error
       }
     };
 
@@ -23,23 +26,34 @@ const UserProfilePage = () => {
 
 }, []);
 
+if (loading) {
+  return (
+      <div className="flex justify-center items-center h-screen">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+  );
+}
+
 
   return (
-    <div className="profile-container">
-      <h2>User Profile</h2>
-      <p><strong>Name: </strong> {user.name}</p>
-      <p><strong>Email: </strong> {user.email}</p>
-      <h2>Skills</h2>
-      {user.skills && user.skills.length > 0 ? (
-        <ul>
-          {user.skills.map(skill => (
-            <li key = {skill.id}>{skill.title}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No skills listed.</p>
-      )}
-    </div>
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+            <h1 className="text-4xl font-bold text-gray-800 mb-6">{user.name}'s Profile</h1>
+            <div className="text-lg text-gray-700 mb-4">
+                <p><span className="font-semibold">Email:</span> {user.email}</p>
+                <p><span className="font-semibold">Role:</span> {user.role}</p>
+            </div>
+
+            <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">Skills</h2>
+            <ul className="space-y-4">
+                {user.skills.map(skill => (
+                    <li key={skill.id} className="p-4 border rounded-lg bg-gray-100 hover:bg-gray-200 transition">
+                        <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
+                        <p className="text-gray-600">{skill.description}</p>
+                        <p className="text-gray-800 font-semibold">Price: ${skill.price}</p>
+                    </li>
+                ))}
+            </ul>
+        </div>
   )
 }
 
