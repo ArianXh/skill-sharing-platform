@@ -28,14 +28,14 @@ const HomePage = () => {
                       </a>
                     </div>
                   </div>
-                  <Link to="/login" className="hidden sm:ml-6 sm:flex sm:items-center">
+                  <a href="/login" className="hidden sm:ml-6 sm:flex sm:items-center">
                     <button
                     type="button"
                     className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
                     >
                     Login
                     </button>
-                  </Link>
+                  </a>
                 </div>
               </div>
             </nav>
