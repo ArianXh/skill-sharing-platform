@@ -2,12 +2,77 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authMiddleware = require('../authMiddleware');
-const pool = require('../config/database');
-const router = express.Router();
-
-const User = require('..//..//models/User');
+const User = require('../../models/User');
 const Skills = require('../../models/Skills');
 
+const router = express.Router();
+
+
+// CRUD Operations for Users
+
+
+// 1. Get All Users (GET /users)
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    } catch {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching users' });
+    }
+});
+
+// 2. Get a Single User by ID (GET /users/:id)
+router.get('/users/:id', async(req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching user' });
+    }
+});
+
+// 3. Update User by ID (PUT /users/:id)
+router.put('/users/:id', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            user.name = name || user.name;
+            user.email = email || user.email;
+            user.password = password || user.password;
+            await user.save();
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error updating user' });
+    }
+});
+
+
+// 4. Delete User by ID (DELETE /users/:id)
+router.delete('/users/:id', async (req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            await user.destroy();
+            res.status(204).send(); // No Content response
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error){
+        console.error(error);
+        res.status(500).json({ error: 'Error deleting user' });
+    }
+});
 
 // User Login
 router.post('/login', async (req, res) => {
@@ -18,26 +83,9 @@ router.post('/login', async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Continue with password verification and other logic
-        console.log(user.name)
-        console.log(user.email)
-        console.log(user.password)
-        console.log(password)
-
-        /*
-        if (user.rows.length === 0) {
-            return res.status(400).json({ message: 'Invalid credentials' });
-        }
-        */
-        
-        // Has the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(user.password, salt);
-
         // Compare the provided password with the stored hashed password
-        const isMatch = await bcrypt.compare(password, hashedPassword);
-        console.log(`Is it a match: ${isMatch}`)
-        if(!isMatch) {
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
 
@@ -49,6 +97,7 @@ router.post('/login', async (req, res) => {
                 email: user.email,
             },
         };
+
         // Sign the JWT and send it to the client
         jwt.sign(
             payload,
@@ -65,50 +114,47 @@ router.post('/login', async (req, res) => {
     }
 });
 
-
-// Register a New User
+// New User SignUp
 router.post('/signup', async (req, res) => {
     const { name, email, password } = req.body;
     try {
         // Check if the user already exists
-        const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-        console.log(userExists.rows)
-        
-        if (userExists.rows.length > 0) {
+        const userExists = await User.findOne({ where: { email } });
+        if (userExists) {
             return res.status(400).json({ message: 'User already exists!' });
         }
 
-        // Has the password
+        // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Insert the new user into the database
-        const newUser = await pool.query(
-            'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *',
-            [name, email, hashedPassword]
-        );
+        const newUser = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+        });
 
-        res.status(201).json(newUser.rows[0]);
+        res.status(201).json(newUser);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ message: 'Server errorzh' });
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
 // Get User Profile
-// Retrieves the user's profile information based on their ID (extracted from the JWT token).
-
 router.get('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findByPk(userId, {
-             attributes: ['id', 'name', 'email'],
-             include: [{
+            attributes: ['id', 'name', 'email'],
+            include: [{
                 model: Skills,
                 as: 'skills',
                 attributes: ['id', 'user_id', 'title', 'description', 'price'],
-             }] });
-        //const skills = await Skills.findAll({where: {userId}})
+            }],
+        });
+
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -120,17 +166,13 @@ router.get('/profile', authMiddleware, async (req, res) => {
     }
 });
 
-
 // Update User Profile
-// Allows the user to update their profile information like name or email.
-
 router.put('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id; // `req.user` is populated by `authMiddleware`
         const { name, email } = req.body;
 
         const user = await User.findByPk(userId);
-
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -139,7 +181,6 @@ router.put('/profile', authMiddleware, async (req, res) => {
         user.email = email || user.email;
 
         await user.save();
-
         res.json(user);
     } catch (error) {
         console.error('Error updating user profile:', error);
@@ -147,7 +188,4 @@ router.put('/profile', authMiddleware, async (req, res) => {
     }
 });
 
-
-
-
-module.exports = router
+module.exports = router;
