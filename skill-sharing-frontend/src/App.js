@@ -10,6 +10,7 @@ import EditProfile from './components/EditUserProfile';
 import Explore from './pages/Explore';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import SkillsMarketplace from './pages/SkillsMarketplace';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path='/profile' element={< UserProfilePage /> } />
         <Route path='/edit-profile' element={< EditProfile /> } />
         <Route path='/signup' element={< SignUpForm />} />
+        <Route path='/marketplace' element={< SkillsMarketplace /> } />
         <Route path='/login' element={< LoginForm />} />
         <Route path='/dashboard' element={< UserDashboard />} />
         <Route path='/explore' element={< Explore /> } />
