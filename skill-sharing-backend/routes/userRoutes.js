@@ -19,7 +19,7 @@ router.get('/users', async (req, res) => {
     } catch {
         console.error(error);
         res.status(500).json({ error: 'Error fetching users' });
-    }
+    }   
 });
 
 // 2. Get a Single User by ID (GET /users/:id)
@@ -151,7 +151,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
             include: [{
                 model: Skills,
                 as: 'skills',
-                attributes: ['id', 'user_id', 'title', 'description', 'price'],
+                attributes: ['id', 'user_id', 'title', 'description', 'price', 'skill_level', 'popularity_score'],
             }],
         });
 

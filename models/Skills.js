@@ -30,10 +30,30 @@ const Skills = sequelize.define('Skills', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
+  category_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
+  skill_level: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    validate: {
+        isIn: [['Beginner', 'Intermediate', 'Advanced']], // Example values
+    },
+  },
+  popularity_score: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+    defaultValue: 0,
+  },
+
 }, {
+  sequelize,
   tableName: 'skills',  // Match the table name in your schema
   modelName: 'Skills',
   timestamps: false,    // Disable automatic timestamp fields (createdAt, updatedAt)
 });
+
+//Skills.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 module.exports = Skills;

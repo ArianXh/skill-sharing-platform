@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const UserProfilePage = () => {
-  const [user, setUser] = useState({name: '', email: ''});
+  const [user, setUser] = useState({name: '', email: '', role: '', skills: [] });
   const [loading, setLoading] = useState(true); // Loading state
 
   useEffect(() => {
@@ -85,6 +85,8 @@ if (loading) {
                             <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
                             <p className="text-gray-600">{skill.description}</p>
                             <p className="text-gray-800 font-semibold">Price: ${skill.price}</p>
+                            <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
+                            <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
                         </li>
                     ))}
                 </ul>
