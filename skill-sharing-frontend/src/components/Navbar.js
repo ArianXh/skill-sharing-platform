@@ -1,12 +1,41 @@
 // src/components/Navbar.js
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false); // State to manage mobile menu
+    const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState(null); // State to hold user info
+    const location = useLocation(); // Get current location
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    const response = await axios.get('http://localhost:5000/api/users/profile', {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setUser(response.data); // Set user data
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    };
+
+    const getLinkClass = (path) => {
+        return location.pathname === path
+            ? 'text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium'
+            : 'text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium';
     };
 
     return (
@@ -18,32 +47,28 @@ const Navbar = () => {
                             {/* You can add a logo here if needed */}
                         </div>
                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
-                            <Link to="/" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium">
-                                Home
-                            </Link>
-                            <Link to="/explore" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">
-                                Explore
-                            </Link>
-                            <Link to="/marketplace" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">
-                                Marketplace
-                            </Link>
-                            <Link to="/about" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">
-                                About
-                            </Link>
-                            <Link to="/contact" className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium">
-                                Contact
-                            </Link>
+                            <Link to="/" className={getLinkClass('/')}>Home</Link>
+                            <Link to="/explore" className={getLinkClass('/explore')}>Explore</Link>
+                            <Link to="/marketplace" className={getLinkClass('/marketplace')}>Marketplace</Link>
+                            <Link to="/about" className={getLinkClass('/about')}>About</Link>
+                            <Link to="/contact" className={getLinkClass('/contact')}>Contact</Link>
                         </div>
                     </div>
                     <div className="hidden sm:flex sm:items-center">
-                        <Link to="/login">
-                            <button
-                                type="button"
-                                className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
-                            >
-                                Login
-                            </button>
-                        </Link>
+                        {user ? (
+                            <span className="text-gray-900 px-4 py-2">
+                                Welcome, {user.name}
+                            </span>
+                        ) : (
+                            <Link to="/login">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
+                                >
+                                    Login
+                                </button>
+                            </Link>
+                        )}
                     </div>
                     {/* Hamburger Icon */}
                     <div className="flex sm:hidden">
@@ -63,14 +88,20 @@ const Navbar = () => {
                     <Link to="/marketplace" className="block text-gray-900 py-2">Marketplace</Link>
                     <Link to="/about" className="block text-gray-900 py-2">About</Link>
                     <Link to="/contact" className="block text-gray-900 py-2">Contact</Link>
-                    <Link to="/login" className="block text-gray-900 py-2">
-                        <button
-                            type="button"
-                            className="w-full px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
-                        >
-                            Login
-                        </button>
-                    </Link>
+                    {user ? (
+                        <span className="block text-gray-900 py-2">
+                            Welcome, {user.name}
+                        </span>
+                    ) : (
+                        <Link to="/login">
+                            <button
+                                type="button"
+                                className="w-full px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
+                            >
+                                Login
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>
