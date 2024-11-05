@@ -1,13 +1,17 @@
-import React, { useState} from 'react';
-import axios from 'axios'; // Axios for making HTTP requests
+import React, { useState } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 
 const SignUpForm = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        password: ''
-    })
+        password: '',
+        role: 'Learner', // Default to 'Learner' or 'Trainer' as appropriate
+        ratings_average: 0,  // Default to 0 for ratings_average,
+        bio: '',
+        experience: '',
+    });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -18,28 +22,24 @@ const SignUpForm = () => {
           ...formData,
           [name]: value,
         });
-      };
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        //console.log('Form submitted:', formData);
         try {
-            // Make the API call to register the user
             const response = await axios.post('http://localhost:5000/api/users/signup', formData);
-
-            // Handle success
             setSuccess('Registration successful!');
             setError('');
-
-            // Optionally, redirect the user or clear the form
             setFormData({
                 name: '',
                 email: '',
                 password: '',
+                role: 'Learner',
+                bio: '',
+                experience: '',
             });
-        } catch (error){
-            // Handle error
-            setError(error.response.data.message || 'An error occured');
+        } catch (error) {
+            setError(error.response?.data?.message || 'An error occurred');
             setSuccess('');
         }
     };
@@ -52,10 +52,10 @@ const SignUpForm = () => {
               <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
               {error && <p className="text-red-500 text-center mb-4">{error}</p>}
               {success && <p className="text-green-500 text-center mb-4">{success}</p>}
+
+              {/* Name */}
               <div className="mb-4">
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                  Name
-                </label>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input
                   type="text"
                   id="name"
@@ -66,10 +66,10 @@ const SignUpForm = () => {
                   required
                 />
               </div>
+
+              {/* Email */}
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email
-                </label>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input
                   type="email"
                   id="email"
@@ -80,10 +80,10 @@ const SignUpForm = () => {
                   required
                 />
               </div>
-              <div className="mb-6">
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
+
+              {/* Password */}
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                 <input
                   type="password"
                   id="password"
@@ -94,6 +94,52 @@ const SignUpForm = () => {
                   required
                 />
               </div>
+
+              {/* Role */}
+              <div className="mb-4">
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                >
+                  <option value="Learner">Learner</option>
+                  <option value="Trainer">Trainer</option>
+                </select>
+              </div>
+
+              {/* Bio */}
+              <div className="mb-4">
+                <label htmlFor="bio" className="block text-sm font-medium text-gray-700">Bio</label>
+                <textarea
+                  id="bio"
+                  name="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                  placeholder="Tell us a little about yourself..."
+                />
+              </div>
+
+              {/* Experience */}
+              <div className="mb-4">
+                <label htmlFor="experience" className="block text-sm font-medium text-gray-700">Experience</label>
+                <textarea
+                  id="experience"
+                  name="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  required
+                  placeholder="Describe your experience..."
+                />
+              </div>
+
+              {/* Submit Button */}
               <button
                 type="submit"
                 className="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
@@ -102,8 +148,8 @@ const SignUpForm = () => {
               </button>
             </form>
           </div>
-        </div>
-      );
+      </div>
+    );
 }
 
-export default SignUpForm
+export default SignUpForm;

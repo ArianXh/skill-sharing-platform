@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
 
 // New User SignUp
 router.post('/signup', async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, bio, profile_image_url, experience, ratings_average} = req.body;
     try {
         // Check if the user already exists
         const userExists = await User.findOne({ where: { email } });
@@ -133,6 +133,11 @@ router.post('/signup', async (req, res) => {
             name,
             email,
             password: hashedPassword,
+            bio,
+            profile_image_url,
+            experience,
+            ratings_average,
+
         });
 
         res.status(201).json(newUser);
@@ -147,7 +152,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findByPk(userId, {
-            attributes: ['id', 'name', 'email'],
+            attributes: ['id', 'name', 'email', 'bio', 'profile_image_url', 'experience', 'ratings_average'],
             include: [{
                 model: Skills,
                 as: 'skills',

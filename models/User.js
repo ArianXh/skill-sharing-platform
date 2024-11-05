@@ -20,6 +20,22 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  bio: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  profile_image_url: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  experience: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  ratings_average: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 }, {
   tableName: 'users',  // Match the table name in your schema
   modelName: 'User',
