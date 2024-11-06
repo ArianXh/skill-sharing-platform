@@ -175,7 +175,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
 router.put('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id; // `req.user` is populated by `authMiddleware`
-        const { name, email } = req.body;
+        const { name, email, bio, experience } = req.body;
 
         const user = await User.findByPk(userId);
         if (!user) {
@@ -184,6 +184,8 @@ router.put('/profile', authMiddleware, async (req, res) => {
 
         user.name = name || user.name;
         user.email = email || user.email;
+        user.bio = bio || user.bio;
+        user.experience = experience || user.experience
 
         await user.save();
         res.json(user);

@@ -1,5 +1,6 @@
 // components/EditProfile.js
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
 import axios from 'axios';
 import Navbar from './Navbar';
 
@@ -7,10 +8,14 @@ const EditProfile = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    bio: '',
+    experience: '',
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Fetch current user data on component mount
   useEffect(() => {
@@ -26,6 +31,8 @@ const EditProfile = () => {
         setFormData({
           name: response.data.name,
           email: response.data.email,
+          bio: response.data.bio,
+          experience: response.data.experience,
         });
         setLoading(false);
       } catch (err) {
@@ -63,6 +70,9 @@ const EditProfile = () => {
       );
       setMessage('Profile updated successfully');
       setLoading(false);
+
+      // Redirect back to UserProfilePage after successful update
+      navigate('/profile');
     } catch (err) {
       console.error('Error updating profile:', err);
       setError('Error updating profile');
@@ -72,7 +82,6 @@ const EditProfile = () => {
 
   return (
     <div>
-      <Navbar />
       <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
         <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
@@ -127,6 +136,46 @@ const EditProfile = () => {
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter your email"
+                  required
+                />
+              </div>
+
+
+              <div>
+                <label
+                  htmlFor="bio"
+                  className="block text-gray-700 font-medium mb-2"
+                >
+                  Bio
+                </label>
+                <textarea
+                  type="text"
+                  name="bio"
+                  id="bio"
+                  value={formData.bio}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your bio"
+                  required
+                />
+              </div>
+
+
+              <div>
+                <label
+                  htmlFor="experience"
+                  className="block text-gray-700 font-medium mb-2"
+                >
+                  Experience
+                </label>
+                <textarea
+                  type="textfield"
+                  name="experience"
+                  id="experience"
+                  value={formData.experience}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter your experience"
                   required
                 />
               </div>
