@@ -1,12 +1,23 @@
 // src/components/Navbar.js
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [user, setUser] = useState(null); // State to hold user info
     const location = useLocation(); // Get current location
+    const navigate = useNavigate();
+
+    const handleProfileClick = () => {
+        navigate('/profile');
+      };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // remove token from localStorage
+        setUser(null); // Optionally clear user state
+        navigate('/'); // Redirect to the login page
+    }
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -56,9 +67,25 @@ const Navbar = () => {
                     </div>
                     <div className="hidden sm:flex sm:items-center">
                         {user ? (
+                        <>
                             <span className="text-gray-900 px-4 py-2">
                                 Welcome, {user.name}
                             </span>
+                            <button
+                                type="button"
+                                onClick={handleProfileClick}
+                                className="ml-4 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-400 focus:outline-none"
+                            >
+                                My Profile
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleLogout}
+                                className="ml-4 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-400 focus:outline-none"
+                            >
+                                Logout
+                            </button>
+                          </>
                         ) : (
                             <Link to="/login">
                                 <button
