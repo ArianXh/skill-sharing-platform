@@ -12,7 +12,7 @@ const Skills = sequelize.define('Skills', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-        model: User,
+        model: 'users', // Referencing 'users' table by its name, Sequelize will handle this
         key: 'id'
     },
     onDelete: 'CASCADE',
@@ -46,7 +46,6 @@ const Skills = sequelize.define('Skills', {
     allowNull: true,
     defaultValue: 0,
   },
-
 }, {
   sequelize,
   tableName: 'skills',  // Match the table name in your schema
@@ -54,6 +53,7 @@ const Skills = sequelize.define('Skills', {
   timestamps: false,    // Disable automatic timestamp fields (createdAt, updatedAt)
 });
 
+// Define the relationship with User (Skills belongs to User)
 //Skills.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 module.exports = Skills;

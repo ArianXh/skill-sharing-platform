@@ -11,6 +11,7 @@ import Explore from './pages/Explore';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import SkillsMarketplace from './pages/SkillsMarketplace';
+import SingleSkill from './components/SingleSkill';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/explore' element={< Explore /> } />
         <Route path='/about' element={< About /> } />
         <Route path='/contact' element={< Contact /> } />
+        <Route path='/skills/:id' element={< SingleSkill /> } />
       </Routes>
     </Router>
   );

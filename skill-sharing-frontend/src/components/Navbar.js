@@ -69,7 +69,7 @@ const Navbar = () => {
                         {user ? (
                         <>
                             <span className="text-gray-900 px-4 py-2">
-                                Welcome, {user.name}
+                                <b>Welcome, {user.name}</b>
                             </span>
                             <button
                                 type="button"

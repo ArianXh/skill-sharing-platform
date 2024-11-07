@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const Marketplace = () => {
@@ -26,7 +27,6 @@ const Marketplace = () => {
         <div>
             <Navbar />
             <div className="bg-gray-100 min-h-screen">
-                {/* Page Content */}
                 <div className="p-6 max-w-7xl mx-auto">
                     <h2 className="text-2xl font-semibold mb-4">Explore Skills</h2>
 
@@ -66,14 +66,18 @@ const Marketplace = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {skills.length > 0 ? (
                             skills.map((skill) => (
-                                <div key={skill.id} className="p-4 bg-white rounded-lg shadow-md">
+                                <Link
+                                    key={skill.id}
+                                    to={`/skills/${skill.id}`} // Link to the user's profile
+                                    className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
+                                >
                                     <h3 className="font-semibold text-lg">{skill.title}</h3>
                                     <p className="text-gray-500">
                                         {skill.category === 1 ? 'Programming' : skill.category === 2 ? 'Design' : 'Other'}
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
                                     <p className="text-gray-700">Price: ${skill.price}</p>
-                                </div>
+                                </Link>
                             ))
                         ) : (
                             <p className="text-gray-500">No skills found. Adjust your filters and try again.</p>

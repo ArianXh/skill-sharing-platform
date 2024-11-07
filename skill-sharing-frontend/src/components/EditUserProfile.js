@@ -1,4 +1,3 @@
-// components/EditProfile.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -118,8 +117,9 @@ const EditProfile = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
-        <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="w-full max-w-4xl bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
             Edit Profile
           </h2>
@@ -128,9 +128,11 @@ const EditProfile = () => {
           {error && <p className="text-center text-red-500 mb-4">{error}</p>}
           {message && <p className="text-center text-green-500 mb-4">{message}</p>}
 
-          {!loading && (
-            <form onSubmit={handleUpdate} className="space-y-4">
-              {/* Existing form fields */}
+          <div className="flex flex-wrap space-x-4">
+            {/* Update Profile Form */}
+            <form onSubmit={handleUpdate} className="flex-1 space-y-4">
+              <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
+
               <div>
                 <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
                 <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required />
@@ -155,40 +157,38 @@ const EditProfile = () => {
                 {loading ? 'Updating...' : 'Update Profile'}
               </button>
             </form>
-          )}
 
-          {/* Add Skill Form */}
-          <h2 className="text-xl font-bold mt-8 text-gray-800">Add Skill</h2>
-          <form onSubmit={handleAddSkill} className="space-y-4 mt-4">
-            <div>
-              <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Skill Title</label>
-              <input type="text" name="title" id="title" value={skillData.title} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill title" required />
-            </div>
-            <div>
-              <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
-              <textarea name="description" id="description" value={skillData.description} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill description" required />
-            </div>
-            <div>
-              <label htmlFor="price" className="block text-gray-700 font-medium mb-2">Price</label>
-              <input type="number" name="price" id="price" value={skillData.price} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill price" required />
-            </div>
-            <div>
-              <label htmlFor="skill_level" className="block text-gray-700 font-medium mb-2">Skill Level</label>
-              <select
-                name="skill_level"
-                id="skill_level"
-                value={skillData.skill_level}
-                onChange={handleSkillChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-            </select>
+            {/* Add Skill Form */}
+            <form onSubmit={handleAddSkill} className="flex-1 space-y-4">
+              <h3 className="text-xl font-semibold mb-4">Add Skill</h3>
+
+              <div>
+                <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Skill Title</label>
+                <input type="text" name="title" id="title" value={skillData.title} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill title" required />
+              </div>
+
+              <div>
+                <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
+                <textarea name="description" id="description" value={skillData.description} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill description" required />
+              </div>
+
+              <div>
+                <label htmlFor="price" className="block text-gray-700 font-medium mb-2">Price</label>
+                <input type="number" name="price" id="price" value={skillData.price} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill price" required />
+              </div>
+
+              <div>
+                <label htmlFor="skill_level" className="block text-gray-700 font-medium mb-2">Skill Level</label>
+                <select name="skill_level" id="skill_level" value={skillData.skill_level} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+
+              <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">Add Skill</button>
+            </form>
           </div>
-
-            <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">Add Skill</button>
-          </form>
 
           {/* Display Current Skills */}
           <h3 className="text-xl font-bold mt-8 text-gray-800">Current Skills</h3>
@@ -197,8 +197,8 @@ const EditProfile = () => {
               <li key={skill.id} className="p-2 border rounded bg-gray-100">
                 <p className="text-lg font-semibold">Title: {skill.title}</p>
                 <p>Description: {skill.description}</p>
-                <p>Skill level: {skill.skill_level}</p>
-                <p className="text-gray-700">Price: ${skill.price}</p>
+                <p>Price: ${skill.price}</p>
+                <p>Level: {skill.skill_level}</p>
               </li>
             ))}
           </ul>

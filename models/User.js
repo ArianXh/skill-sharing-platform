@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../skill-sharing-backend/config/database');
+const Skills = require('./Skills'); // Ensure Skills is imported here
 
 const User = sequelize.define('User', {
   id: {
@@ -37,13 +38,13 @@ const User = sequelize.define('User', {
     allowNull: true,
   },
 }, {
+  sequelize,
   tableName: 'users',  // Match the table name in your schema
   modelName: 'User',
   timestamps: false,    // Disable automatic timestamp fields (createdAt, updatedAt)
 });
 
-
-// Defining the relationship with Skill
-User.hasMany(require('./Skills'), { foreignKey: 'user_id', as: 'skills' });
+// Define the relationship with Skills (User has many Skills)
+User.hasMany(Skills, { foreignKey: 'user_id', as: 'skills' });
 
 module.exports = User;
