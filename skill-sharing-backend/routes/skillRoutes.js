@@ -30,14 +30,16 @@ router.get('/skills', async (req, res) => {
 // Add more routes here as needed, for example:
 // Create a new skill (POST /api/skills)
 router.post('/create', authMiddleware, async (req, res) => {
-    const { title, description, price, category_id } = req.body;
-
+    const userId = req.user.id; // Using this to add a skill to THIS user (the one logged in)
+    const { title, description, price, skill_level, popularity_score} = req.body;
     try {
         const newSkill = await Skills.create({
             title,
             description,
             price,
-            category_id,
+            skill_level,
+            popularity_score,
+            user_id: userId,
         });
         res.status(201).json(newSkill);
     } catch (error) {

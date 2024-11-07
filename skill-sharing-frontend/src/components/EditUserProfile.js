@@ -1,6 +1,6 @@
 // components/EditProfile.js
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 
@@ -11,13 +11,20 @@ const EditProfile = () => {
     bio: '',
     experience: '',
   });
+  
+  const [skillData, setSkillData] = useState({
+    title: '',
+    description: '',
+    price: '',
+  });
+
+  const [skills, setSkills] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  // Fetch current user data on component mount
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -34,6 +41,7 @@ const EditProfile = () => {
           bio: response.data.bio,
           experience: response.data.experience,
         });
+        setSkills(response.data.skills || []);
         setLoading(false);
       } catch (err) {
         console.error('Error fetching user data:', err);
@@ -54,6 +62,13 @@ const EditProfile = () => {
     setMessage('');
   };
 
+  const handleSkillChange = (e) => {
+    setSkillData({
+      ...skillData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
@@ -70,13 +85,33 @@ const EditProfile = () => {
       );
       setMessage('Profile updated successfully');
       setLoading(false);
-
-      // Redirect back to UserProfilePage after successful update
       navigate('/profile');
     } catch (err) {
       console.error('Error updating profile:', err);
       setError('Error updating profile');
       setLoading(false);
+    }
+  };
+
+  const handleAddSkill = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        'http://localhost:5000/api/skills/create',
+        { ...skillData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSkills([...skills, response.data]);
+      setSkillData({ title: '', description: '', price: '' });
+      setMessage('Skill added successfully');
+    } catch (err) {
+      console.error('Error adding skill:', err);
+      setError('Failed to add skill');
     }
   };
 
@@ -88,107 +123,69 @@ const EditProfile = () => {
             Edit Profile
           </h2>
 
-          {loading && (
-            <p className="text-center text-gray-500 mb-4">Loading...</p>
-          )}
-
-          {error && (
-            <p className="text-center text-red-500 mb-4">{error}</p>
-          )}
-
-          {message && (
-            <p className="text-center text-green-500 mb-4">{message}</p>
-          )}
+          {loading && <p className="text-center text-gray-500 mb-4">Loading...</p>}
+          {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+          {message && <p className="text-center text-green-500 mb-4">{message}</p>}
 
           {!loading && (
             <form onSubmit={handleUpdate} className="space-y-4">
+              {/* Existing form fields */}
               <div>
-                <label
-                  htmlFor="name"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your name"
-                  required
-                />
+                <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
+                <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required />
               </div>
 
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your email"
-                  required
-                />
+                <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
+                <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required />
               </div>
-
 
               <div>
-                <label
-                  htmlFor="bio"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Bio
-                </label>
-                <textarea
-                  type="text"
-                  name="bio"
-                  id="bio"
-                  value={formData.bio}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your bio"
-                  required
-                />
+                <label htmlFor="bio" className="block text-gray-700 font-medium mb-2">Bio</label>
+                <textarea name="bio" id="bio" value={formData.bio} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your bio" required />
               </div>
-
 
               <div>
-                <label
-                  htmlFor="experience"
-                  className="block text-gray-700 font-medium mb-2"
-                >
-                  Experience
-                </label>
-                <textarea
-                  type="textfield"
-                  name="experience"
-                  id="experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter your experience"
-                  required
-                />
+                <label htmlFor="experience" className="block text-gray-700 font-medium mb-2">Experience</label>
+                <textarea name="experience" id="experience" value={formData.experience} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your experience" required />
               </div>
 
-              <button
-                type="submit"
-                className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300"
-                disabled={loading}
-              >
+              <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300" disabled={loading}>
                 {loading ? 'Updating...' : 'Update Profile'}
               </button>
             </form>
           )}
+
+          {/* Add Skill Form */}
+          <h2 className="text-xl font-bold mt-8 text-gray-800">Add Skill</h2>
+          <form onSubmit={handleAddSkill} className="space-y-4 mt-4">
+            <div>
+              <label htmlFor="title" className="block text-gray-700 font-medium mb-2">Skill Title</label>
+              <input type="text" name="title" id="title" value={skillData.title} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill title" required />
+            </div>
+            <div>
+              <label htmlFor="description" className="block text-gray-700 font-medium mb-2">Description</label>
+              <textarea name="description" id="description" value={skillData.description} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill description" required />
+            </div>
+            <div>
+              <label htmlFor="price" className="block text-gray-700 font-medium mb-2">Price</label>
+              <input type="number" name="price" id="price" value={skillData.price} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill price" required />
+            </div>
+
+            <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">Add Skill</button>
+          </form>
+
+          {/* Display Current Skills */}
+          <h3 className="text-xl font-bold mt-8 text-gray-800">Current Skills</h3>
+          <ul className="mt-4 space-y-2">
+            {skills.map((skill) => (
+              <li key={skill.id} className="p-2 border rounded bg-gray-100">
+                <p className="text-lg font-semibold">{skill.title}</p>
+                <p>{skill.description}</p>
+                <p className="text-gray-700">Price: ${skill.price}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
