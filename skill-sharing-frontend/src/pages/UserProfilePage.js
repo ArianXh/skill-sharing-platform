@@ -67,7 +67,7 @@ const UserProfilePage = () => {
 
                 {/* Edit Button Section */}
                 <div className="mt-8 mb-4">
-                    <h2 className="text-2xl font-semibold text-gray-800">Edit</h2>
+                    <h2 className="text-2xl font-semibold text-gray-800">Skills rating average:</h2>
                     <p className="text-yellow-500 text-lg">{user.ratings_average} / 5</p>
                     <button 
                         onClick={handleEditClick}

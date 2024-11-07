@@ -16,6 +16,7 @@ const EditProfile = () => {
     title: '',
     description: '',
     price: '',
+    skill_level: '',
   });
 
   const [skills, setSkills] = useState([]);
@@ -107,7 +108,7 @@ const EditProfile = () => {
         }
       );
       setSkills([...skills, response.data]);
-      setSkillData({ title: '', description: '', price: '' });
+      setSkillData({ title: '', description: '', price: '' , skill_level: ''});
       setMessage('Skill added successfully');
     } catch (err) {
       console.error('Error adding skill:', err);
@@ -171,6 +172,20 @@ const EditProfile = () => {
               <label htmlFor="price" className="block text-gray-700 font-medium mb-2">Price</label>
               <input type="number" name="price" id="price" value={skillData.price} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill price" required />
             </div>
+            <div>
+              <label htmlFor="skill_level" className="block text-gray-700 font-medium mb-2">Skill Level</label>
+              <select
+                name="skill_level"
+                id="skill_level"
+                value={skillData.skill_level}
+                onChange={handleSkillChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+            </select>
+          </div>
 
             <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">Add Skill</button>
           </form>
@@ -180,8 +195,9 @@ const EditProfile = () => {
           <ul className="mt-4 space-y-2">
             {skills.map((skill) => (
               <li key={skill.id} className="p-2 border rounded bg-gray-100">
-                <p className="text-lg font-semibold">{skill.title}</p>
-                <p>{skill.description}</p>
+                <p className="text-lg font-semibold">Title: {skill.title}</p>
+                <p>Description: {skill.description}</p>
+                <p>Skill level: {skill.skill_level}</p>
                 <p className="text-gray-700">Price: ${skill.price}</p>
               </li>
             ))}
