@@ -4,7 +4,8 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 
 const UserProfilePage = () => {
-    const [user, setUser] = useState({ name: '', email: '', role: '', skills: [], ratings_average: 0 });
+    const [user, setUser] = useState({ name: '', email: '', role: '', skills: [], ratings_average: 0, bio: '', experience: '', credits: 0 });
+    //const [credits, setCredits] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -27,7 +28,7 @@ const UserProfilePage = () => {
 
         fetchUserProfile();
     }, []);
-
+    
     if (loading) {
         return (
             <div className="flex justify-center items-center h-screen">
@@ -50,6 +51,7 @@ const UserProfilePage = () => {
                     <p><span className="font-semibold">Role:</span> {user.role}</p>
                     <p><span className="font-semibold">Bio:</span> {user.bio}</p>
                     <p><span className="font-semibold">Experience:</span> {user.experience}</p>
+                    <p><span className="font-semibold">Credits:</span> {user.credits}</p>
                 </div>
 
                 <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">Skills</h2>
@@ -76,6 +78,15 @@ const UserProfilePage = () => {
                         Edit Profile
                     </button>
                 </div>
+
+                <div className="wallet">
+                    <h2 className="text-2xl font-semibold text-gray-800">Your Wallet</h2>
+                    {user.credits !== null ? (
+                        <h2  className="text-2xl font-semibold text-gray-800">Your current balance: {user.credits} credits</h2>
+                        ) : (
+                        <p>Loading your credit balance...</p>
+                    )}
+        </div>
             </div>
         </div>
     );

@@ -152,7 +152,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
     try {
         const userId = req.user.id;
         const user = await User.findByPk(userId, {
-            attributes: ['id', 'name', 'email', 'bio', 'profile_image_url', 'experience', 'ratings_average'],
+            attributes: ['id', 'name', 'email', 'bio', 'profile_image_url', 'experience', 'ratings_average', 'credits'],
             include: [{
                 model: Skills,
                 as: 'skills',
@@ -194,5 +194,6 @@ router.put('/profile', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
 
 module.exports = router;

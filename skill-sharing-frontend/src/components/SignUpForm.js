@@ -11,6 +11,7 @@ const SignUpForm = () => {
         ratings_average: 0,  // Default to 0 for ratings_average,
         bio: '',
         experience: '',
+        credits: 0,
     });
 
     const [error, setError] = useState('');
@@ -37,6 +38,7 @@ const SignUpForm = () => {
                 role: 'Learner',
                 bio: '',
                 experience: '',
+                credits: 0,
             });
         } catch (error) {
             setError(error.response?.data?.message || 'An error occurred');

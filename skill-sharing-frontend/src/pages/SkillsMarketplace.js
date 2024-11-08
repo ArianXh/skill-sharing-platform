@@ -8,6 +8,7 @@ const Marketplace = () => {
     const [category, setCategory] = useState('');
     const [skillLevel, setSkillLevel] = useState('');
     const [search, setSearch] = useState('');
+    const [message, setMessage] = useState('');
 
     useEffect(() => {
         const fetchSkills = async () => {
@@ -22,6 +23,16 @@ const Marketplace = () => {
         };
         fetchSkills();
     }, [category, skillLevel, search]);
+
+
+    const handlePurchase = async (skillId) => {
+        try {
+          const response = await axios.post(`http://localhost:5000/api/skills/skills/purchase/${skillId}`);
+          setMessage(`Successfully purchased skill! Remaining credits: ${response.data.remainingCredits}`);
+        } catch (error) {
+          setMessage(error.response?.data?.error || 'An error occurred during purchase');
+        }
+      };
 
     return (
         <div>
@@ -63,10 +74,11 @@ const Marketplace = () => {
                     </div>
 
                     {/* Skills Listing */}
+                    {message && <p>{message}</p>}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {skills.length > 0 ? (
                             skills.map((skill) => (
-                                <Link
+                                <Link   
                                     key={skill.id}
                                     to={`/skills/${skill.id}`} // Link to the user's profile
                                     className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
@@ -77,6 +89,7 @@ const Marketplace = () => {
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
                                     <p className="text-gray-700">Price: ${skill.price}</p>
+                                    <button onClick={() => handlePurchase (skill.id)} className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'>Purchase Skill</button>
                                 </Link>
                             ))
                         ) : (

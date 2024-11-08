@@ -134,7 +134,40 @@ router.get('/skills/:id/reviews', async (req, res) => {
     }
   });
   
-  
+  // skillRoutes.js
+router.post('/skills/purchase/:skillId', authMiddleware, async (req, res) => {
+  const buyerId = req.user.id;
+  const { skillId } = req.params;
+
+  try {
+      const skill = await Skills.findByPk(skillId, { include: User });
+
+      if (!skill) {
+          return res.status(404).json({ error: 'Skill not found' });
+      }
+
+      const seller = skill.User;
+      const buyer = await User.findByPk(buyerId);
+
+      const cost = skill.price;
+
+      if (buyer.credits < cost) {
+          return res.status(400).json({ error: 'Insufficient credits' });
+      }
+
+      buyer.credits -= cost;
+      seller.credits += cost;
+
+      await buyer.save();
+      await seller.save();
+
+      res.json({ message: 'Skill purchased successfully' });
+  } catch (error) {
+      console.error('Error purchasing skill:', error);
+      res.status(500).json({ error: 'Server error' });
+  }
+});
+
 
 // Update a skill (PUT /api/skills/:id)
 // Delete a skill (DELETE /api/skills/:id)
