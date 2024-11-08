@@ -12,14 +12,17 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import SkillsMarketplace from './pages/SkillsMarketplace';
 import SingleSkill from './components/SingleSkill';
+import PrivateRoute from './components/PrivateRoute';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={< HomePage />} />
-        <Route path='/profile' element={< UserProfilePage /> } />
+        <Route path="/profile" element={<PrivateRoute element={< UserProfilePage />} />} />
         <Route path='/edit-profile' element={< EditProfile /> } />
+        <Route path="/unauthorized" element={< Unauthorized />} />
         <Route path='/signup' element={< SignUpForm />} />
         <Route path='/marketplace' element={< SkillsMarketplace /> } />
         <Route path='/login' element={< LoginForm />} />
