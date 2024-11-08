@@ -8,7 +8,7 @@ Skills.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
 User.hasMany(Review, { foreignKey: 'user_id', as: 'reviews' });
 Skills.hasMany(Review, { foreignKey: 'skill_id', as: 'reviews' });
-Review.belongsTo(User, { foreignKey: 'user_id' });
-Review.belongsTo(Skills, { foreignKey: 'skill_id' });
+Review.belongsTo(User, { foreignKey: 'user_id', as: 'user'});
+Review.belongsTo(Skills, { foreignKey: 'skill_id', as: 'skill' });
 
 module.exports = { User, Skills, Review };

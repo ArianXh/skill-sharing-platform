@@ -2,6 +2,7 @@ const express = require('express');
 const authMiddleware = require('../authMiddleware');
 const Skills = require('../../models/Skills');
 const User = require('../../models/User');
+const Review = require('../../models/Review');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
@@ -31,24 +32,32 @@ router.get('/skills', async (req, res) => {
 
 // Fetch a SINGLE skill by ID (GET /api/skills/:id)
 router.get('/skills/:id', async (req, res) => {
-    const skillId = req.params.id;
-    try {
-        const skill = await Skills.findByPk(skillId, {
-            include: {
-                model: User,
-                as: 'user',  // Match the alias used in the relationship
-                attributes: ['id', 'name', 'email'] // Specify the fields you need
-            }
-        });
-        if (!skill) {
-            return res.status(404).json({ error: 'Skill not found' });
-        }
-        res.status(200).json(skill);
-    } catch (error) {
-        console.error('Error fetching skill:', error);
-        res.status(500).json({ error: 'Error fetching skill' });
-    }
+  const skillId = req.params.id;
+  try {
+      const skill = await Skills.findByPk(skillId, {
+          include: [
+              {
+                  model: User,
+                  as: 'user',  // Alias should match the model association
+                  attributes: ['id', 'name', 'email']
+              },
+              {
+                  model: Review,
+                  as: 'reviews',  // Alias should match the model association
+                  include: [{ model: User, as: 'user', attributes: ['name'] }],
+              }
+          ]
+      });
+      if (!skill) {
+          return res.status(404).json({ error: 'Skill not found' });
+      }
+      res.status(200).json(skill);
+  } catch (error) {
+      console.error('Error fetching skill:', error);
+      res.status(500).json({ error: 'Error fetching skill' });
+  }
 });
+
 
 // Add more routes here as needed, for example:
 // Create a new skill (POST /api/skills)
@@ -72,7 +81,7 @@ router.post('/create', authMiddleware, async (req, res) => {
 });
 
 // Add a review to a skill (POST /api/skills/:id/review)
-router.post('/:id/review', authMiddleware, async (req, res) => {
+router.post('/skills/:id/review', authMiddleware, async (req, res) => {
     const skillId = req.params.id;
     const userId = req.user.id;
     const { rating, review } = req.body;
@@ -100,7 +109,7 @@ router.post('/:id/review', authMiddleware, async (req, res) => {
   });
 
   // Fetch all reviews for a specific skill (GET /api/skills/:id/reviews)
-router.get('/:id/reviews', async (req, res) => {
+router.get('/skills/:id/reviews', async (req, res) => {
     const skillId = req.params.id;
   
     try {
@@ -108,7 +117,8 @@ router.get('/:id/reviews', async (req, res) => {
         include: [
           {
             model: Review,
-            include: [{ model: User, attributes: ['name'] }], // Include the name of the user who left the review
+            as: 'reviews',
+            include: [{ model: User, as: 'user', attributes: ['name'] }], // Include the name of the user who left the review
           },
         ],
       });
