@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database');
-const User = require('../models/User'); // Assuming the path is correct
+const { User, Skills, Review } = require('..//models/associations'); // Assuming the path is correct
 const userRoutes = require('./routes/userRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 require('dotenv').config();
@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 sequelize.sync()
     .then(() => {
         console.log('PostgreSQL connected and synced');
+        console.log('Database and tables created');
     })
     .catch(err => {
         console.error('PostgreSQL connection error:', err);

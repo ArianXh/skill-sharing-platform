@@ -50,7 +50,6 @@ router.get('/skills/:id', async (req, res) => {
     }
 });
 
-
 // Add more routes here as needed, for example:
 // Create a new skill (POST /api/skills)
 router.post('/create', authMiddleware, async (req, res) => {
@@ -71,6 +70,61 @@ router.post('/create', authMiddleware, async (req, res) => {
         res.status(500).json({ error: 'Server error' });
     }
 });
+
+// Add a review to a skill (POST /api/skills/:id/review)
+router.post('/:id/review', authMiddleware, async (req, res) => {
+    const skillId = req.params.id;
+    const userId = req.user.id;
+    const { rating, review } = req.body;
+  
+    try {
+      // Check if the skill exists
+      const skill = await Skills.findByPk(skillId);
+      if (!skill) {
+        return res.status(404).json({ error: 'Skill not found' });
+      }
+  
+      // Create the review
+      const newReview = await Review.create({
+        rating,
+        review,
+        skill_id: skillId,
+        user_id: userId,
+      });
+  
+      res.status(201).json(newReview);
+    } catch (error) {
+      console.error('Error adding review:', error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  });
+
+  // Fetch all reviews for a specific skill (GET /api/skills/:id/reviews)
+router.get('/:id/reviews', async (req, res) => {
+    const skillId = req.params.id;
+  
+    try {
+      const skill = await Skills.findByPk(skillId, {
+        include: [
+          {
+            model: Review,
+            include: [{ model: User, attributes: ['name'] }], // Include the name of the user who left the review
+          },
+        ],
+      });
+  
+      if (!skill) {
+        return res.status(404).json({ error: 'Skill not found' });
+      }
+  
+      res.status(200).json(skill.Reviews); // Send reviews for the skill
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+      res.status(500).json({ error: 'Error fetching reviews' });
+    }
+  });
+  
+  
 
 // Update a skill (PUT /api/skills/:id)
 // Delete a skill (DELETE /api/skills/:id)

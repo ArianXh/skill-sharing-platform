@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../skill-sharing-backend/config/database');
 const User = require('./User');
+const Review = require('./Review');
 
 const Skills = sequelize.define('Skills', {
   id: {
@@ -53,7 +54,6 @@ const Skills = sequelize.define('Skills', {
   timestamps: false,    // Disable automatic timestamp fields (createdAt, updatedAt)
 });
 
-// Define the relationship with User (Skills belongs to User)
-//Skills.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 
 module.exports = Skills;
