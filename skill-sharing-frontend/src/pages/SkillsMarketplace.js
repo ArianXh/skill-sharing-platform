@@ -24,16 +24,6 @@ const Marketplace = () => {
         fetchSkills();
     }, [category, skillLevel, search]);
 
-
-    const handlePurchase = async (skillId) => {
-        try {
-          const response = await axios.post(`http://localhost:5000/api/skills/skills/purchase/${skillId}`);
-          setMessage(`Successfully purchased skill! Remaining credits: ${response.data.remainingCredits}`);
-        } catch (error) {
-          setMessage(error.response?.data?.error || 'An error occurred during purchase');
-        }
-      };
-
     return (
         <div>
             <Navbar />
@@ -88,8 +78,7 @@ const Marketplace = () => {
                                         {skill.category === 1 ? 'Programming' : skill.category === 2 ? 'Design' : 'Other'}
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
-                                    <p className="text-gray-700">Price: ${skill.price}</p>
-                                    <button onClick={() => handlePurchase (skill.id)} className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'>Purchase Skill</button>
+                                    <p className="text-gray-700">Price: {skill.price} credits</p>
                                 </Link>
                             ))
                         ) : (

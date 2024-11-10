@@ -88,7 +88,15 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
   
     try {
       // Check if the skill exists
-      const skill = await Skills.findByPk(skillId);
+      const skill = await Skills.findByPk(skillId, {
+        include: [
+          {
+            model: Review,
+            as: 'reviews',
+            include: [{ model: User, as: 'user', attributes: ['name'] }], // Include the name of the user who left the review
+          },
+        ],
+      });
       if (!skill) {
         return res.status(404).json({ error: 'Skill not found' });
       }
@@ -135,37 +143,50 @@ router.get('/skills/:id/reviews', async (req, res) => {
   });
   
   // skillRoutes.js
-router.post('/skills/purchase/:skillId', authMiddleware, async (req, res) => {
-  const buyerId = req.user.id;
-  const { skillId } = req.params;
+  router.post('/skills/purchase/:id', authMiddleware, async (req, res) => {
+    console.log('Purchase route hit');
+    const skillId = req.params.id;
+    const buyerId = req.user.id; // Assuming the buyer's ID is extracted from a valid token
 
-  try {
-      const skill = await Skills.findByPk(skillId, { include: User });
+    try {
+        // Fetch the skill along with its associated user (seller)
+        const skill = await Skills.findByPk(skillId, {
+            include: [{ model: User, as: 'user', attributes: ['id', 'name', 'email'] }],
+        });
 
-      if (!skill) {
-          return res.status(404).json({ error: 'Skill not found' });
-      }
+        if (!skill) {
+            return res.status(404).json({ error: 'Skill not found' });
+        }
 
-      const seller = skill.User;
-      const buyer = await User.findByPk(buyerId);
+        // Retrieve the seller (owner of the skill)
+        const seller = skill.User;
 
-      const cost = skill.price;
+        if (!seller) {
+            return res.status(404).json({ error: 'Seller not found for this skill' });
+        }
 
-      if (buyer.credits < cost) {
-          return res.status(400).json({ error: 'Insufficient credits' });
-      }
+        // Fetch the buyer (current logged-in user)
+        const buyer = await User.findByPk(buyerId);
 
-      buyer.credits -= cost;
-      seller.credits += cost;
+        if (buyer.credits < skill.price) {
+            return res.status(400).json({ error: 'Insufficient credits' });
+        }
 
-      await buyer.save();
-      await seller.save();
+        // Deduct credits and complete the purchase
+        buyer.credits -= skill.price;
+        await buyer.save();
 
-      res.json({ message: 'Skill purchased successfully' });
-  } catch (error) {
-      console.error('Error purchasing skill:', error);
-      res.status(500).json({ error: 'Server error' });
-  }
+        // Here, you could also add logic to transfer credits to the seller if needed
+
+        res.json({
+            message: 'Purchase successful',
+            remainingCredits: buyer.credits,
+            seller: { id: seller.id, name: seller.name, email: seller.email }, // Send seller info in response
+        });
+    } catch (error) {
+        console.error('Error in purchase endpoint:', error);
+        res.status(500).json({ error: 'An internal server error occurred' });
+    }
 });
 
 
