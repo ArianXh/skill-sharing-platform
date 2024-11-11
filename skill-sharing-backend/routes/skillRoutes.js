@@ -84,7 +84,7 @@ router.post('/create', authMiddleware, async (req, res) => {
 router.post('/skills/:id/review', authMiddleware, async (req, res) => {
     const skillId = req.params.id;
     const userId = req.user.id;
-    const { rating, review } = req.body;
+    const { rating, review_text } = req.body;
   
     try {
       // Check if the skill exists
@@ -103,8 +103,8 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
   
       // Create the review
       const newReview = await Review.create({
-        rating,
-        review,
+        rating: req.body.rating,
+        review_text: req.body.review_text,
         skill_id: skillId,
         user_id: userId,
       });

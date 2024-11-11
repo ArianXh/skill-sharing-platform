@@ -55,7 +55,7 @@ function SingleSkill() {
             console.log("Rating submitted: ", rating);
             const response = await axios.post(
                 `http://localhost:5000/api/skills/skills/${id}/review`,
-                { review: reviewText, rating },
+                { review_text: reviewText, rating },
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -66,6 +66,7 @@ function SingleSkill() {
                 ...prevSkill,
                 reviews: [...prevSkill.reviews, response.data]  // Add the new review to the list
             }));
+            console.log(response.data);
             setReviewText('');
             setRating(0);
         } catch (error) {
@@ -98,8 +99,7 @@ function SingleSkill() {
                         {skill.reviews.length > 0 ? (
                             skill.reviews.map((review) => (
                                 <div key={review.id} className="border-b border-gray-300 py-4">
-                                    <p><strong>{review.user.name}</strong>: {review.review}</p>
-                                    <p>{review.review_text}</p>
+                                    <p><strong>{review.user?.name || 'Anonymous'}</strong>: {review.review_text}</p>
                                     <p>Rating: {review.rating} stars</p>
                                 </div>
                             ))
