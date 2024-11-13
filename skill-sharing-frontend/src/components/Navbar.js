@@ -9,16 +9,6 @@ const Navbar = () => {
     const location = useLocation(); // Get current location
     const navigate = useNavigate();
 
-    const handleProfileClick = () => {
-        navigate('/profile');
-      };
-
-    const handleLogout = () => {
-        localStorage.removeItem('token'); // remove token from localStorage
-        setUser(null); // Optionally clear user state
-        navigate('/'); // Redirect to the login page
-    }
-
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
@@ -38,6 +28,16 @@ const Navbar = () => {
 
         fetchUserProfile();
     }, []);
+
+    const handleProfileClick = () => {
+        navigate('/profile');
+      };
+
+    const handleLogout = () => {
+        localStorage.removeItem('token'); // remove token from localStorage
+        setUser(null); // Optionally clear user state
+        navigate('/'); // Redirect to the login page
+    }
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);

@@ -1,15 +1,16 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const authMiddleware = require('../authMiddleware');
+const authMiddleware = require('../authMiddleware/authMiddleware');
 const User = require('../../models/User');
 const Skills = require('../../models/Skills');
 
 const router = express.Router();
 
 
-// CRUD Operations for Users
-
+////////////////////////////////   NOT IN USE YET   ///////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // 1. Get All Users (GET /users)
 router.get('/users', async (req, res) => {
@@ -57,7 +58,6 @@ router.put('/users/:id', async (req, res) => {
     }
 });
 
-
 // 4. Delete User by ID (DELETE /users/:id)
 router.delete('/users/:id', async (req, res) => {
     try {
@@ -73,6 +73,10 @@ router.delete('/users/:id', async (req, res) => {
         res.status(500).json({ error: 'Error deleting user' });
     }
 });
+
+/////////////////////////////////   NOT IN USE YET   //////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // User Login
 router.post('/login', async (req, res) => {
@@ -95,6 +99,7 @@ router.post('/login', async (req, res) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                role: user.role,
             },
         };
 
@@ -116,28 +121,26 @@ router.post('/login', async (req, res) => {
 
 // New User SignUp
 router.post('/signup', async (req, res) => {
-    const { name, email, password, bio, profile_image_url, experience, ratings_average} = req.body;
+    const { name, email, password, role, bio, profile_image_url, experience, ratings_average} = req.body;
     try {
         // Check if the user already exists
         const userExists = await User.findOne({ where: { email } });
         if (userExists) {
             return res.status(400).json({ message: 'User already exists!' });
         }
-
         // Hash the password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
-
         // Insert the new user into the database
         const newUser = await User.create({
             name,
             email,
             password: hashedPassword,
+            role,
             bio,
             profile_image_url,
             experience,
             ratings_average,
-
         });
 
         res.status(201).json(newUser);

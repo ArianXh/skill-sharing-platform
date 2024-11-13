@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import { Link } from 'react-router-dom'; 
 
 const UserProfilePage = () => {
-    const [user, setUser] = useState({ name: '', email: '', role: '', skills: [], ratings_average: 0, bio: '', experience: '', credits: 0 });
-    //const [credits, setCredits] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState({
+      name: '',
+      email: '', 
+      role: '', 
+      skills: [], 
+      ratings_average: 0, 
+      bio: '', 
+      experience: '', 
+      credits: 0 
+    });
     const navigate = useNavigate(); // Initialize useNavigate
 
     useEffect(() => {
@@ -37,7 +46,7 @@ const UserProfilePage = () => {
         );
     }
 
-    const handleEditClick = () => {
+    const handleEditProfileClick = () => {
         navigate('/edit-profile'); // Redirect to the EditUserProfile component
     };
 
@@ -58,11 +67,13 @@ const UserProfilePage = () => {
                 <ul className="space-y-4">
                     {user.skills.map(skill => (
                         <li key={skill.id} className="p-4 border rounded-lg bg-gray-100 hover:bg-gray-200 transition">
-                            <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
-                            <p className="text-gray-600">{skill.description}</p>
-                            <p className="text-gray-800 font-semibold">Price: ${skill.price}</p>
-                            <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
-                            <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
+                            <Link to={`/skills/${skill.id}`} className="block">
+                                <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
+                                <p className="text-gray-600">{skill.description}</p>
+                                <p className="text-gray-800 font-semibold">Price: ${skill.price}</p>
+                                <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
+                                <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -72,7 +83,7 @@ const UserProfilePage = () => {
                     <h2 className="text-2xl font-semibold text-gray-800">Skills rating average:</h2>
                     <p className="text-yellow-500 text-lg">{user.ratings_average} / 5</p>
                     <button 
-                        onClick={handleEditClick}
+                        onClick={handleEditProfileClick}
                         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
                     >
                         Edit Profile

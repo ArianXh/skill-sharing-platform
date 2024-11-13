@@ -4,25 +4,22 @@ import axios from 'axios';
 import Navbar from './Navbar';
 
 const EditProfile = () => {
+  const [skills, setSkills] = useState([]);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     bio: '',
     experience: '',
   });
-  
   const [skillData, setSkillData] = useState({
     title: '',
     description: '',
     price: '',
     skill_level: '',
   });
-
-  const [skills, setSkills] = useState([]);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +50,7 @@ const EditProfile = () => {
     fetchUserData();
   }, []);
 
-  const handleChange = (e) => {
+  const handleProfileChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -69,7 +66,7 @@ const EditProfile = () => {
     });
   };
 
-  const handleUpdate = async (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
@@ -130,27 +127,27 @@ const EditProfile = () => {
 
           <div className="flex flex-wrap space-x-4">
             {/* Update Profile Form */}
-            <form onSubmit={handleUpdate} className="flex-1 space-y-4">
+            <form onSubmit={handleProfileUpdate} className="flex-1 space-y-4">
               <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
 
               <div>
                 <label htmlFor="name" className="block text-gray-700 font-medium mb-2">Name</label>
-                <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required />
+                <input type="text" name="name" id="name" value={formData.name} onChange={handleProfileChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your name" required />
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Email</label>
-                <input type="email" name="email" id="email" value={formData.email} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required />
+                <input type="email" name="email" id="email" value={formData.email} onChange={handleProfileChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your email" required />
               </div>
 
               <div>
                 <label htmlFor="bio" className="block text-gray-700 font-medium mb-2">Bio</label>
-                <textarea name="bio" id="bio" value={formData.bio} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your bio" required />
+                <textarea name="bio" id="bio" value={formData.bio} onChange={handleProfileChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your bio" required />
               </div>
 
               <div>
                 <label htmlFor="experience" className="block text-gray-700 font-medium mb-2">Experience</label>
-                <textarea name="experience" id="experience" value={formData.experience} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your experience" required />
+                <textarea name="experience" id="experience" value={formData.experience} onChange={handleProfileChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your experience" required />
               </div>
 
               <button type="submit" className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300" disabled={loading}>

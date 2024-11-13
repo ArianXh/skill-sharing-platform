@@ -4,7 +4,6 @@ import HomePage from "./pages/HomePage";
 import UserProfilePage from './pages/UserProfilePage';
 import SignUpForm from './components/SignUpForm';
 import LoginForm from './components/LoginForm';
-import UserDashboard from './pages/UserDashboard';
 import './index.css';
 import EditProfile from './components/EditUserProfile';
 import Explore from './pages/Explore';
@@ -14,6 +13,8 @@ import SkillsMarketplace from './pages/SkillsMarketplace';
 import SingleSkill from './components/SingleSkill';
 import PrivateRoute from './components/PrivateRoute';
 import Unauthorized from './pages/Unauthorized';
+import AdminRoute from './routes/AdminRoute';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -26,11 +27,16 @@ function App() {
         <Route path='/signup' element={< SignUpForm />} />
         <Route path='/marketplace' element={< SkillsMarketplace /> } />
         <Route path='/login' element={< LoginForm />} />
-        <Route path='/dashboard' element={< UserDashboard />} />
         <Route path='/explore' element={< Explore /> } />
         <Route path='/about' element={< About /> } />
         <Route path='/contact' element={< Contact /> } />
         <Route path='/skills/:id' element={< SingleSkill /> } />
+
+        {/* Admin Protected Routes */}
+        <Route element={<AdminRoute />}>
+          <Route path="admin-dashboard" element={<AdminDashboard />} />
+        </Route>
+
       </Routes>
     </Router>
   );

@@ -47,6 +47,11 @@ const Skills = sequelize.define('Skills', {
     allowNull: true,
     defaultValue: 0,
   },
+  ratings_average: {
+    type: DataTypes.FLOAT,
+    allowNull: true,
+    defaultValue: 0,
+  },
 }, {
   sequelize,
   tableName: 'skills',  // Match the table name in your schema

@@ -1,20 +1,20 @@
-// skill-sharing-frontend/src/components/LoginForm.js
 
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
+import { jwtDecode } from 'jwt-decode';
 
 function LoginForm() {
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleLoginChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -22,7 +22,7 @@ function LoginForm() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -30,23 +30,25 @@ function LoginForm() {
 
       // Handle success: store the JWT token
       localStorage.setItem('token', response.data.token);
+      console.log(response.data);
       setSuccess('Login successful!');
       setError('');
       setFormData({
         email: '',
-        password: ''
+        password: '',
+        role: '',
       });
-      // Optionally redirect or update UI after successful login
-      navigate('/'); // Or the route we create
       
-      /* Maybe later I'm going to need to update to this: 
-      if (user.role === 'admin') {
-        navigate('/admin-dashboard');
-      } 
-      else {
-            navigate('/user-dashboard');
-        }
-      */
+      // Decode the token to check role
+      const decodedToken = jwtDecode(response.data.token);
+      console.log('Decoded token: ', decodedToken.user.role);
+
+      if(decodedToken.user.role === 'admin'){
+        navigate('/admin-dashboard'); // Redirect to Admin Dashboard if admin
+      } else {
+        navigate('/'); // Redirect to HomePage if not admin
+      }
+      
     } catch (err) {
       setError(err.response.data.message || 'Invalid credentials');
       setSuccess('');
@@ -57,7 +59,7 @@ function LoginForm() {
     <div>
       <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-sm">
+        <form onSubmit={handleLoginSubmit} className="bg-white p-6 rounded shadow-md w-full max-w-sm">
           <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           {success && <p className="text-green-500 text-center mb-4">{success}</p>}
@@ -70,7 +72,7 @@ function LoginForm() {
               id="email"
               name="email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleLoginChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               required
             />
@@ -84,7 +86,7 @@ function LoginForm() {
               id="password"
               name="password"
               value={formData.password}
-              onChange={handleChange}
+              onChange={handleLoginChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
               required
             />

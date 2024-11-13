@@ -8,7 +8,7 @@ const Contact = () => {
         message: '',
     });
 
-    const handleInputChange = (e) => {
+    const handleContactChange = (e) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -16,7 +16,7 @@ const Contact = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleContactSubmit = (e) => {
         e.preventDefault();
         console.log(formData); // You can handle the form submission logic here
     };
@@ -31,14 +31,14 @@ const Contact = () => {
                         <p className="text-gray-600 text-lg mb-8">
                             Have any questions or need to reach out? Fill out the form below, and we'll get back to you as soon as possible.
                         </p>
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form onSubmit={handleContactSubmit} className="space-y-6">
                             <div>
                                 <label htmlFor="name" className="block text-gray-700">Name</label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={formData.name}
-                                    onChange={handleInputChange}
+                                    onChange={handleContactChange}
                                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
                                     required
                                 />
@@ -49,7 +49,7 @@ const Contact = () => {
                                     type="email"
                                     name="email"
                                     value={formData.email}
-                                    onChange={handleInputChange}
+                                    onChange={handleContactChange}
                                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
                                     required
                                 />
@@ -59,7 +59,7 @@ const Contact = () => {
                                 <textarea
                                     name="message"
                                     value={formData.message}
-                                    onChange={handleInputChange}
+                                    onChange={handleContactChange}
                                     className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm"
                                     rows="5"
                                     required
