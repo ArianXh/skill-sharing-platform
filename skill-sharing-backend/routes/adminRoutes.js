@@ -3,7 +3,7 @@ const router = express.Router();
 const adminAuth = require('../authMiddleware/adminAuth');
 const User = require('../../models/User');
 
-// Get all users (View users in the admin dashboard)
+// 1. Get all users (View users in the admin dashboard)
 router.get('/users', adminAuth, async (req, res) => {
     try {
         const users = await User.findAll(); // Fetch all users from the database
@@ -13,7 +13,22 @@ router.get('/users', adminAuth, async (req, res) => {
     }
 });
 
-// Update user details (Admin updates user role or status)
+// 2. Get a Single User by ID (GET /users/:id)
+router.get('/users/:id', async(req, res) => {
+    try {
+        const user = await User.findByPk(req.params.id);
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ error: 'User not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error fetching user' });
+    }
+});
+
+// 3. Update user details (Admin updates user role or status)
 router.put('/user/:id', adminAuth, async (req, res) => {
     const { id } = req.params;
     const { role, status } = req.body;
@@ -33,7 +48,7 @@ router.put('/user/:id', adminAuth, async (req, res) => {
     }
 });
 
-// Delete a user (Admin deletes a user)
+// 4. Delete a user (Admin deletes a user)
 router.delete('/user/:id', adminAuth, async (req, res) => {
     const { id } = req.params;
 

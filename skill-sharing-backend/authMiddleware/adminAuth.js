@@ -1,9 +1,27 @@
+// adminAuth.js
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+
 const adminAuth = (req, res, next) => {
-    if (req.user && req.user.role === 'admin') {
-        next(); // User is admin, proceed to the next middleware/controller
-    } else {
-        res.status(403).json({ error: 'Access denied: Admins only.' });
+  const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
+
+  if (!token) {
+    return res.status(403).json({ error: 'Access denied. No token provided.' });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    //console.log('ROLEEE: ', decodedToken.user.role)
+    // Check if user has admin role
+    if (decodedToken.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Access denied. Admin privileges are required.' });
     }
+
+    req.user = decodedToken; // Attach decoded token to request
+    next();
+  } catch (error) {
+    res.status(403).json({ error: 'Invalid token.' });
+  }
 };
 
-module.exports =  adminAuth;
+module.exports = adminAuth;
