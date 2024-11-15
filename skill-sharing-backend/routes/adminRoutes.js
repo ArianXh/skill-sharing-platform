@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const adminAuth = require('../authMiddleware/adminAuth');
 const User = require('../../models/User');
+const Skills = require('../../models/Skills');
+const Review = require('../../models/Review');
+const Sequelize = require('sequelize');
 
 // 1. Get all users (View users in the admin dashboard)
 router.get('/users', adminAuth, async (req, res) => {
@@ -16,7 +19,15 @@ router.get('/users', adminAuth, async (req, res) => {
 // 2. Get a Single User by ID (GET /users/:id)
 router.get('/users/:id', async(req, res) => {
     try {
-        const user = await User.findByPk(req.params.id);
+        const userId = req.params.id;
+        const user = await User.findByPk(userId, {
+            attributes: ['id', 'name', 'email', 'bio', 'profile_image_url', 'experience', 'ratings_average', 'credits'],
+            include: [{
+                model: Skills,
+                as: 'skills',
+                attributes: ['id', 'user_id', 'title', 'description', 'price', 'skill_level', 'popularity_score'],
+            }],
+        });
         if (user) {
             res.status(200).json(user);
         } else {
@@ -65,4 +76,46 @@ router.delete('/user/:id', adminAuth, async (req, res) => {
     }
 });
 
+
+// 5. Analytics
+router.get('/analytics', adminAuth, async (req, res) => {
+    try {
+      const numberOfUsers = await User.count();
+      console.log(`Number of users: ${numberOfUsers}`);
+      const numberOfSkills = await Skills.count();
+      console.log(`Number of skills: ${numberOfSkills}`);
+      /*const transactionsPerDay = await Transaction.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's transactions
+          },
+        },
+      });
+      const reviewsPerDay = await Review.count({
+        where: {
+          created_at: {
+            //[Sequelize.Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's reviews
+          },
+        },
+      });
+      const skillsAddedPerDay = await Skills.count({
+        where: {
+          created_at: {
+            //[Sequelize.Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's skills
+          },
+        },
+      });
+        */
+      res.json({
+        numberOfUsers,
+        numberOfSkills,
+        //transactionsPerDay,
+        //reviewsPerDay,
+        //skillsAddedPerDay,
+      });
+    } catch (error) {
+      console.error("Error in analytics route: ", error);
+      res.status(500).json({ error: 'Failed to fetch analytics data.' });
+    }
+  });
 module.exports = router;
