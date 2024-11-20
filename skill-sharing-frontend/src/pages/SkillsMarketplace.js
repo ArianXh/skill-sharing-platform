@@ -41,6 +41,13 @@ const Marketplace = () => {
                             <option value="">All Categories</option>
                             <option value="1">Programming</option>
                             <option value="2">Design</option>
+                            <option value="3">Data Science</option>
+                            <option value="4">Marketing</option>
+                            <option value="5">Business</option>
+                            <option value="6">Personal Development</option>
+                            <option value="7">Finance</option>
+                            <option value="8">Language</option>
+                            <option value="9">Health & Fitness</option>
                         </select>
 
                         <select
@@ -75,7 +82,18 @@ const Marketplace = () => {
                                 >
                                     <h3 className="font-semibold text-lg">{skill.title}</h3>
                                     <p className="text-gray-500">
-                                        {skill.category === 1 ? 'Programming' : skill.category === 2 ? 'Design' : 'Other'}
+                                        {
+                                            skill.category === 1 ? 'Programming': 
+                                            skill.category === 2 ? 'Design'  : 
+                                            skill.category === 3 ? 'Data Science' :
+                                            skill.category === 4 ? 'Marketing' :
+                                            skill.category === 5 ? 'Business' :
+                                            skill.category === 6 ? 'Personal Development' :
+                                            skill.category === 7 ? 'Finance' :
+                                            skill.category === 8 ? 'Language' :
+                                            skill.category === 9 ? 'Health & Fitness' : 
+                                            'Other'
+                                        }
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
                                     <p className="text-gray-700">Price: {skill.price} credits</p>

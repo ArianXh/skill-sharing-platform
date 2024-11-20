@@ -73,6 +73,9 @@ router.post('/create', authMiddleware, async (req, res) => {
             skill_level,
             popularity_score,
             user_id: userId,
+            include: [{
+                
+            }]
         });
         res.status(201).json(newSkill);
     } catch (error) {

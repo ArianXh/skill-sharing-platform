@@ -5,6 +5,7 @@ const User = require('../../models/User');
 const Skills = require('../../models/Skills');
 const Review = require('../../models/Review');
 const Sequelize = require('sequelize');
+const Categories = require('../../models/Categories');
 
 // 1. Get all users (View users in the admin dashboard)
 router.get('/users', adminAuth, async (req, res) => {
@@ -117,5 +118,33 @@ router.get('/analytics', adminAuth, async (req, res) => {
       console.error("Error in analytics route: ", error);
       res.status(500).json({ error: 'Failed to fetch analytics data.' });
     }
-  });
+});
+
+// 6. Get skills count by category
+router.get('/analytics/skills-by-category', adminAuth, async (req, res) => {
+  try {
+      const skillsByCategory = await Skills.findAll({
+          attributes: [
+              'category_id',
+              [Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'count'], // Count the number of skills
+          ],
+          include: [
+              {
+                  model: Categories,
+                  as: 'categories', // Alias matches association
+                  attributes: ['id', 'name'], // Fetch category id & name
+              },
+          ],
+          group: ['Skills.category_id', 'categories.id', 'categories.name'], // Group by category_id and category name
+      });
+
+      res.json(skillsByCategory);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Failed to retrieve skills by category.' });
+  }
+});
+
+
+
 module.exports = router;

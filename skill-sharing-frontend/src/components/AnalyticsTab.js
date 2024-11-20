@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from 'axios';
 
 const AnalyticsTab = () => {
   const [analytics, setAnalytics] = useState({
@@ -9,6 +8,7 @@ const AnalyticsTab = () => {
     //reviewsPerDay: 0,
     //skillsAddedPerDay: 0,
   });
+  const [skillsByCategory, setSkillsByCategory] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +37,7 @@ const AnalyticsTab = () => {
             console.log("Fetched Analytics Data:", data); // Log fetched data
             setAnalytics(data);
             setLoading(false);
-            
+
         } catch (error) {
             if (error.response && error.response.status === 403) {
               setError('Access denied. Admin privileges are required.');
@@ -48,7 +48,31 @@ const AnalyticsTab = () => {
           }
     };
 
+
+    const fetchSkillsByCategory = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            
+            // Check if token is null or undefined
+            if (!token) {
+              throw new Error("No token found in localStorage.");
+            }
+            const response = await fetch("http://localhost:5000/api/admin/analytics/skills-by-category", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response);
+            const data = await response.json();
+            console.log('CHEKC IT', data);
+            setSkillsByCategory(data);
+        } catch (error) {
+            console.error("Failed to fetch skills by category", error);
+        }
+    };
+
     fetchAnalytics();
+    fetchSkillsByCategory();
   }, []);
 
   if (loading) return <p>Loading analytics...</p>;
@@ -86,6 +110,21 @@ const AnalyticsTab = () => {
       <div className="bg-white shadow rounded-lg p-4">
         <h2 className="text-lg font-semibold text-gray-600">Skills Added Per Day</h2>
         <p className="text-2xl font-bold text-red-500">{}</p>
+      </div>
+
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills by Category</h2>
+        <ul className="divide-y divide-gray-200">
+          {skillsByCategory.map((category) => (
+            <li
+              key={category.category_id}
+              className="flex justify-between items-center py-2"
+            >
+              <span className="text-gray-700 font-medium">{category.categories.name}</span>
+              <span className="text-sm text-gray-500">{category.count} Skills</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

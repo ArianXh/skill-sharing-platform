@@ -43,7 +43,7 @@ const Review = sequelize.define('Review', {
   sequelize,
   tableName: 'reviews',  // Match the table name in your schema
   modelName: 'Review',
-  timestamps: true,  // Automatically add createdAt and updatedAt
+  timestamps: false,  // Automatically add createdAt and updatedAt
 });
 
 
