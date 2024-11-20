@@ -146,5 +146,43 @@ router.get('/analytics/skills-by-category', adminAuth, async (req, res) => {
 });
 
 
+// 7. Get skills added per day
+router.get('/analytics/skills-added-per-day', adminAuth, async (req, res) => {
+  try {
+    const skillsAddedPerDay = await Skills.findAll({
+      attributes: [
+        [Sequelize.fn('DATE', Sequelize.col('created_at')), 'date'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+      ],
+      group: [Sequelize.fn('DATE', Sequelize.col('created_at'))],
+      order: [[Sequelize.fn('DATE', Sequelize.col('created_at')), 'DESC']],
+    });
+
+    res.json(skillsAddedPerDay);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve skills added per day.' });
+  }
+});
+
+
+// 8. Get reviews added per day
+router.get('/analytics/reviews-added-per-day', adminAuth, async (req, res) => {
+  try {
+    const reviewsAddedPerDay = await Review.findAll({
+      attributes: [
+        [Sequelize.fn('DATE', Sequelize.col('created_at')), 'date'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+      ],
+      group: [Sequelize.fn('DATE', Sequelize.col('created_at'))],
+      order: [[Sequelize.fn('DATE', Sequelize.col('created_at')), 'DESC']],
+    });
+
+    res.json(reviewsAddedPerDay);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve reviews added per day.' });
+  }
+});
+
+
 
 module.exports = router;

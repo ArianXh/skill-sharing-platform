@@ -8,6 +8,8 @@ const AnalyticsTab = () => {
     //reviewsPerDay: 0,
     //skillsAddedPerDay: 0,
   });
+  const [skillsAddedPerDay, setSkillsAddedPerDay] = useState([]);
+  const [reviewsAddedPerDay, setReviewsAddedPerDay] = useState([]);
   const [skillsByCategory, setSkillsByCategory] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -49,6 +51,47 @@ const AnalyticsTab = () => {
     };
 
 
+    const fetchSkillsAddedPerDay = async () => {
+      try {
+        const token = localStorage.getItem('token');
+            
+        // Check if token is null or undefined
+        if (!token) {
+          throw new Error("No token found in localStorage.");
+        }
+        const response = await fetch("http://localhost:5000/api/admin/analytics/skills-added-per-day", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        setSkillsAddedPerDay(data);
+      } catch (error) {
+        console.error('Failed to fetch skills added per day', error);
+      }
+    };
+    
+    const fetchReviewsAddedPerDay = async () => {
+      try {
+        const token = localStorage.getItem('token');
+            
+        // Check if token is null or undefined
+        if (!token) {
+          throw new Error("No token found in localStorage.");
+        }
+        const response = await fetch("http://localhost:5000/api/admin/analytics/reviews-added-per-day", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        setReviewsAddedPerDay(data);
+      } catch (error) {
+        console.error('Failed to fetch reviews added per day', error);
+      }
+    };
+
+
     const fetchSkillsByCategory = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -62,9 +105,7 @@ const AnalyticsTab = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             const data = await response.json();
-            console.log('CHEKC IT', data);
             setSkillsByCategory(data);
         } catch (error) {
             console.error("Failed to fetch skills by category", error);
@@ -72,6 +113,8 @@ const AnalyticsTab = () => {
     };
 
     fetchAnalytics();
+    fetchSkillsAddedPerDay();
+    fetchReviewsAddedPerDay();
     fetchSkillsByCategory();
   }, []);
 
@@ -101,15 +144,29 @@ const AnalyticsTab = () => {
       </div>
 
       {/* Reviews Per Day */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Reviews Per Day</h2>
-        <p className="text-2xl font-bold text-purple-500">{}</p>
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Reviews Added Per Day</h2>
+        <ul className="divide-y divide-gray-200">
+          {reviewsAddedPerDay.map((entry, index) => (
+            <li key={index} className="flex justify-between items-center py-2">
+              <span className="text-gray-700 font-medium">{entry.date}</span>
+              <span className="text-sm text-gray-500">{entry.count} Reviews</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Skills Added Per Day */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Skills Added Per Day</h2>
-        <p className="text-2xl font-bold text-red-500">{}</p>
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Added Per Day</h2>
+        <ul className="divide-y divide-gray-200">
+          {skillsAddedPerDay.map((entry, index) => (
+            <li key={index} className="flex justify-between items-center py-2">
+              <span className="text-gray-700 font-medium">{entry.date}</span>
+              <span className="text-sm text-gray-500">{entry.count} Skills</span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div className="p-6 bg-white rounded-lg shadow-md">
