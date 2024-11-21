@@ -11,6 +11,12 @@ const AnalyticsTab = () => {
   const [skillsAddedPerDay, setSkillsAddedPerDay] = useState([]);
   const [reviewsAddedPerDay, setReviewsAddedPerDay] = useState([]);
   const [skillsByCategory, setSkillsByCategory] = useState([]);
+
+  const [topCategories, setTopCategories] = useState([]);
+  const [skillsGrowth, setSkillsGrowth] = useState([]);
+  const [pricingTrends, setPricingTrends] = useState([]);
+  const [topDemandSkills, setTopDemandSkills] = useState([]);
+
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +55,42 @@ const AnalyticsTab = () => {
             setLoading(false);
           }
     };
+
+    const fetchMetrics = async () => {
+      try {
+          const token = localStorage.getItem('token'); // Adjust token retrieval as per your app's logic
+  
+          const [categoriesRes, growthRes, pricingRes, demandRes] = await Promise.all([
+              fetch("http://localhost:5000/api/admin/analytics/top-skill-categories", {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              }).then(res => res.json()), 
+              fetch("http://localhost:5000/api/admin/analytics/skills-growth", {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              }).then(res => res.json()),
+              fetch("http://localhost:5000/api/admin/analytics/skill-pricing-trends", {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              }).then(res => res.json()), /*
+              fetch("http://localhost:5000/api/admin/analytics/top-demand-skills", {
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  },
+              }).then(res => res.json()),*/
+          ]);
+          setTopCategories(categoriesRes);
+          setSkillsGrowth(growthRes);
+          setPricingTrends(pricingRes);
+          //setTopDemandSkills(demandRes);
+      } catch (error) {
+          console.error('Failed to fetch analytics data:', error);
+      }
+  };
+  
 
 
     const fetchSkillsAddedPerDay = async () => {
@@ -116,6 +158,7 @@ const AnalyticsTab = () => {
     fetchSkillsAddedPerDay();
     fetchReviewsAddedPerDay();
     fetchSkillsByCategory();
+    fetchMetrics();
   }, []);
 
   if (loading) return <p>Loading analytics...</p>;
@@ -127,13 +170,13 @@ const AnalyticsTab = () => {
       
       {/* Number of Users */}
       <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Number of Users</h2>
+        <h2 className="text-lg font-semibold text-gray-600">Total Number of Users</h2>
         <p className="text-2xl font-bold text-blue-500">{analytics.numberOfUsers}</p>
       </div>
 
       {/* Number of Skills */}
       <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Number of Skills</h2>
+        <h2 className="text-lg font-semibold text-gray-600">Total Number of Skills</h2>
         <p className="text-2xl font-bold text-green-500">{analytics.numberOfSkills}</p>
       </div>
 
@@ -183,6 +226,69 @@ const AnalyticsTab = () => {
           ))}
         </ul>
       </div>
+
+
+
+        {/* Top Categories */}
+        <div className="p-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Skills by Category</h2>
+          <ul className="divide-y divide-gray-200">
+            {topCategories.map((category) => (
+              <li
+                key={category.category_id}
+                className="flex justify-between items-center py-2"
+              >
+                <span className="text-gray-700 font-medium">{category.categories.name}</span>
+                <span className="text-sm text-gray-500">{category.skill_count} Skills</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+            {/* Pricing Trends */}
+            <div className="p-6 bg-white rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Skill Pricing Trends by Category</h2>
+              <ul>
+                {pricingTrends.map((trend) => (
+                  <li key={trend.category_id} className="flex justify-between items-center py-2">
+                    <span className="text-gray-700 font-medium">{trend.categories.name}</span>
+                    <span className="text-sm text-gray-500">{isNaN(parseFloat(trend.average_price)) ? 'N/A' : parseFloat(trend.average_price).toFixed(2)} credits</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Skills Growth */}
+            <div className="p-6 bg-white rounded-lg shadow-md">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Growth Over Time</h2>
+                <ul className="divide-y divide-gray-200">
+                    {skillsGrowth.map((growth, index) => (
+                        <li key={index} className="flex justify-between items-center py-2">
+                            <span className="text-gray-700 font-medium">{new Date(growth.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                            <span className="text-sm text-gray-500">{growth.skill_count} Skills</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            
+
+            {/* Top Demand Skills */}
+            <div className="p-6 bg-white rounded shadow">
+                <h2 className="text-lg font-semibold text-gray-600">Top Demand Skills</h2>
+                <ul>
+                    {topDemandSkills.map((skill) => (
+                        <li key={skill.id} className="flex justify-between">
+                            <span>{skill.title}</span>
+                            <span>{skill.review_count} Reviews</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+
+
+
     </div>
   );
 };

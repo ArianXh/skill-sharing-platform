@@ -183,6 +183,87 @@ router.get('/analytics/reviews-added-per-day', adminAuth, async (req, res) => {
   }
 });
 
+// 9. Get Top Skill Categories
+router.get('/analytics/top-skill-categories', adminAuth, async (req, res) => {
+  try {
+      const topSkillCategories = await Skills.findAll({
+          attributes: [
+              'category_id',
+              [Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'skill_count']
+          ],
+          include: [
+              { model: Categories, as: 'categories', attributes: ['id', 'name'] }
+          ],
+          group: ['Skills.category_id', 'categories.id', 'categories.name'],
+          order: [[Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'DESC']],
+      });
+      res.json(topSkillCategories);
+  } catch (error) {
+      console.error('Error in /analytics/top-skill-categories:', error); // Log details
+      res.status(500).json({ error: 'Failed to retrieve top skill categories.', details: error.message });
+  }
+});
 
+
+// 10. Get Skills Growth Over Time
+router.get('/analytics/skills-growth', adminAuth, async (req, res) => {
+  try {
+      const skillsGrowth = await Skills.findAll({
+          attributes: [
+              [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('Skills.created_at')), 'month'],
+              [Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'skill_count'],
+          ],
+          group: [Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('Skills.created_at'))],
+          order: [[Sequelize.fn('DATE_TRUNC', 'month', Sequelize.col('Skills.created_at')), 'ASC']],
+          raw: true,
+      });
+      res.json(skillsGrowth);
+  } catch (error) {
+      console.error('Error in /analytics/skills-growth:', error); // Log full error
+      res.status(500).json({ error: error.message || 'Failed to retrieve skills growth.' });
+  }
+});
+
+
+// 11. Get Skill Pricing Trends
+router.get('/analytics/skill-pricing-trends', adminAuth, async (req, res) => {
+  try {
+    const pricingTrends = await Skills.findAll({
+      attributes: [
+          'category_id',
+          [Sequelize.fn('AVG', Sequelize.col('Skills.price')), 'average_price']
+      ],
+      include: [
+          { model: Categories, as: 'categories', attributes: ['id', 'name'] }
+      ],
+      group: ['Skills.category_id', 'categories.id', 'categories.name'], // Include 'categories.name'
+    });
+      res.json(pricingTrends);
+  } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve skill pricing trends.' });
+  }
+});
+
+/*
+// 12. Get Skills with the Highest Demand
+router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
+  try {
+    const topDemandSkills = await Skills.findAll({
+      attributes: [
+          'id', 'title',
+          [Sequelize.fn('COUNT', Sequelize.col('reviews.id')), 'review_count']
+      ],
+      include: [
+          { model: Review, as: 'reviews', attributes: ['id'] }
+      ],
+      group: ['Skills.id', 'Skills.title', 'Review.id'], // Include title in the group
+      order: [[Sequelize.fn('COUNT', Sequelize.col('reviews.id')), 'DESC']],
+      limit: 10,
+  });
+      res.json(topDemandSkills);
+  } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve top demand skills.' });
+  }
+});*/
 
 module.exports = router;

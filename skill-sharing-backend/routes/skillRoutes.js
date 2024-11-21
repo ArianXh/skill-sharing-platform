@@ -20,6 +20,7 @@ router.get('/skills', async (req, res) => {
 
     try {
         const skills = await Skills.findAll({
+            attributes: ['id', 'user_id', 'title', 'description', 'price', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average'],
             where: filters,
             order: [['popularity_score', 'DESC']]
         });
@@ -36,6 +37,7 @@ router.get('/skills/:id', async (req, res) => {
     const skillId = req.params.id;
     try {
         const skill = await Skills.findByPk(skillId, {
+            attributes: ['id', 'user_id', 'title', 'description', 'price', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average'],
             include: [
                 {
                     model: User,
