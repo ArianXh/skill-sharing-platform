@@ -57,6 +57,8 @@ const Skills = sequelize.define('Skills', {
   tableName: 'skills',  // Match the table name in your schema
   modelName: 'Skills',
   timestamps: true,    // Disable automatic timestamp fields (createdAt, updatedAt)
+  createdAt: 'created_at', // Map createdAt to created_at
+  updatedAt: 'updated_at', // Map updatedAt to updated_at
 });
 
 

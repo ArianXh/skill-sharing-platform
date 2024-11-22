@@ -3,6 +3,7 @@ const authMiddleware = require('../authMiddleware/authMiddleware');
 const Skills = require('../../models/Skills');
 const User = require('../../models/User');
 const Review = require('../../models/Review');
+const Categories = require('../../models/Categories');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
@@ -66,8 +67,16 @@ router.get('/skills/:id', async (req, res) => {
 // Create a new skill (POST /api/skills)
 router.post('/create', authMiddleware, async (req, res) => {
     const userId = req.user.id; // Using this to add a skill to THIS user (the one logged in)
-    const { title, description, price, skill_level, popularity_score} = req.body;
+    const { title, description, price, skill_level, popularity_score, category_id } = req.body;
     try {
+
+        // Ensure category_id exists
+        const category = await Categories.findByPk(category_id);
+        if (!category){
+            return res.status(400).json({ error: 'Invalid category' });
+        }
+
+        // Creating the skill with the associated category
         const newSkill = await Skills.create({
             title,
             description,
@@ -75,10 +84,9 @@ router.post('/create', authMiddleware, async (req, res) => {
             skill_level,
             popularity_score,
             user_id: userId,
-            include: [{
-                
-            }]
+            category_id,
         });
+        console.log(`NEW SKILL: ${newSkill}`);
         res.status(201).json(newSkill);
     } catch (error) {
         console.error('Error creating skill:', error);

@@ -104,7 +104,7 @@ const EditProfile = () => {
         }
       );
       setSkills([...skills, response.data]);
-      setSkillData({ title: '', description: '', price: '' , skill_level: ''});
+      setSkillData({ title: '', description: '', price: '' , skill_level: '' });
       setMessage('Skill added successfully');
     } catch (err) {
       console.error('Error adding skill:', err);
@@ -182,6 +182,28 @@ const EditProfile = () => {
                   <option value="Advanced">Advanced</option>
                 </select>
               </div>
+
+              <div>
+              <label htmlFor="category_id" className="block text-gray-700 font-medium mb-2">Category</label>
+              <select
+                name="category_id"
+                id="category_id"
+                value={skillData.category_id || ""}
+                onChange={handleSkillChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="1">Programming</option>
+                <option value="2">Design</option>
+                <option value="3">Data Science</option>
+                <option value="4">Marketing</option>
+                <option value="5">Business</option>
+                <option value="6">Personal Development</option>
+                <option value="7">Finance</option>
+                <option value="8">Health & Fitness</option>
+              </select>
+            </div>
 
               <button type="submit" className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md hover:bg-green-700 transition duration-300">Add Skill</button>
             </form>

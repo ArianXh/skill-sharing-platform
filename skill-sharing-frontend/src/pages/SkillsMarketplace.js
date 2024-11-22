@@ -77,21 +77,21 @@ const Marketplace = () => {
                             skills.map((skill) => (
                                 <Link   
                                     key={skill.id}
-                                    to={`/skills/${skill.id}`} // Link to the user's profile
+                                    to={`/skills/${skill.id}`} // Link to the single skill page
                                     className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
                                 >
                                     <h3 className="font-semibold text-lg">{skill.title}</h3>
                                     <p className="text-gray-500">
                                         {
-                                            skill.category === 1 ? 'Programming': 
-                                            skill.category === 2 ? 'Design'  : 
-                                            skill.category === 3 ? 'Data Science' :
-                                            skill.category === 4 ? 'Marketing' :
-                                            skill.category === 5 ? 'Business' :
-                                            skill.category === 6 ? 'Personal Development' :
-                                            skill.category === 7 ? 'Finance' :
-                                            skill.category === 8 ? 'Language' :
-                                            skill.category === 9 ? 'Health & Fitness' : 
+                                            skill.category_id === 1 ? 'Programming': 
+                                            skill.category_id === 2 ? 'Design'  : 
+                                            skill.category_id === 3 ? 'Data Science' :
+                                            skill.category_id === 4 ? 'Marketing' :
+                                            skill.category_id === 5 ? 'Business' :
+                                            skill.category_id === 6 ? 'Personal Development' :
+                                            skill.category_id === 7 ? 'Finance' :
+                                            skill.category_id === 8 ? 'Language' :
+                                            skill.category_id === 9 ? 'Health & Fitness' : 
                                             'Other'
                                         }
                                     </p>
