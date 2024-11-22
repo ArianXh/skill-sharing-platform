@@ -245,46 +245,44 @@ const AnalyticsTab = () => {
           </ul>
         </div>
 
-            {/* Pricing Trends */}
-            <div className="p-6 bg-white rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Skill Pricing Trends by Category</h2>
-              <ul>
-                {pricingTrends.map((trend) => (
-                  <li key={trend.category_id} className="flex justify-between items-center py-2">
-                    <span className="text-gray-700 font-medium">{trend.categories.name}</span>
-                    <span className="text-sm text-gray-500">{isNaN(parseFloat(trend.average_price)) ? 'N/A' : parseFloat(trend.average_price).toFixed(2)} credits</span>
-                  </li>
+        {/* Pricing Trends */}
+        <div className="p-6 bg-white rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Skill Pricing Trends by Category</h2>
+          <ul>
+            {pricingTrends.map((trend) => (
+              <li key={trend.category_id} className="flex justify-between items-center py-2">
+                <span className="text-gray-700 font-medium">{trend.categories.name}</span>
+                <span className="text-sm text-gray-500">{isNaN(parseFloat(trend.average_price)) ? 'N/A' : parseFloat(trend.average_price).toFixed(2)} credits</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Skills Growth */}
+        <div className="p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Growth Over Time</h2>
+            <ul className="divide-y divide-gray-200">
+                {skillsGrowth.map((growth, index) => (
+                    <li key={index} className="flex justify-between items-center py-2">
+                        <span className="text-gray-700 font-medium">{new Date(growth.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                        <span className="text-sm text-gray-500">{growth.skill_count} Skills</span>
+                    </li>
                 ))}
-              </ul>
-            </div>
-
-            {/* Skills Growth */}
-            <div className="p-6 bg-white rounded-lg shadow-md">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Growth Over Time</h2>
-                <ul className="divide-y divide-gray-200">
-                    {skillsGrowth.map((growth, index) => (
-                        <li key={index} className="flex justify-between items-center py-2">
-                            <span className="text-gray-700 font-medium">{new Date(growth.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                            <span className="text-sm text-gray-500">{growth.skill_count} Skills</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-
-            
-
-            {/* Top Demand Skills */}
-            <div className="p-6 bg-white rounded shadow">
-                <h2 className="text-lg font-semibold text-gray-600">Top Demand Skills</h2>
-                <ul>
-                    {topDemandSkills.map((skill) => (
-                        <li key={skill.id} className="flex justify-between">
-                            <span>{skill.title}</span>
-                            <span>{skill.review_count} Reviews</span>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            </ul>
+        </div>
+        
+        {/* Top Demand Skills */}
+        <div className="p-6 bg-white rounded shadow">
+            <h2 className="text-lg font-semibold text-gray-600">Top Demand Skills</h2>
+            <ul>
+                {topDemandSkills.map((skill) => (
+                    <li key={skill.id} className="flex justify-between">
+                        <span>{skill.title}</span>
+                        <span>{skill.review_count} Reviews</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
 
 
 
