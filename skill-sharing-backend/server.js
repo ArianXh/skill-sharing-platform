@@ -5,6 +5,7 @@ const { User, Skills, Review } = require('..//models/associations'); // Assuming
 const userRoutes = require('./routes/userRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
 
 require('dotenv').config();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/transactions', transactionRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
