@@ -25,7 +25,7 @@ Transactions.belongsTo(User, { as: 'buyer', foreignKey: 'buyer_id' });
 Transactions.belongsTo(User, { as: 'seller', foreignKey: 'seller_id' });
 
 Skills.hasMany(Transactions, { foreignKey: 'skill_id' });
-Transactions.belongsTo(Skills, { foreignKey: 'skill_id' });
+Transactions.belongsTo(Skills, { foreignKey: 'skill_id', as: 'skill'});
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 

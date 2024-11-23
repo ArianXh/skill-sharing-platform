@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import UsersTab from '..//components/UsersTab';
 import AnalyticsTab from '../components/AnalyticsTab';
+import PurchasesTab from '../components/PurchasesTab';
 
 function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('Users');
@@ -46,7 +47,7 @@ function AdminDashboard() {
 
         {activeTab === 'Users' && <UsersTab />}
         {activeTab === 'Analytics' && <AnalyticsTab />}
-        {activeTab === 'Purchases' && <div>Purchases/Transactions content goes here.</div>}
+        {activeTab === 'Purchases' && <PurchasesTab />}
       </main>
     </div>
   );

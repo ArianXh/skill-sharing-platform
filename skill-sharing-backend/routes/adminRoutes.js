@@ -4,8 +4,10 @@ const adminAuth = require('../authMiddleware/adminAuth');
 const User = require('../../models/User');
 const Skills = require('../../models/Skills');
 const Review = require('../../models/Review');
-const Sequelize = require('sequelize');
 const Categories = require('../../models/Categories');
+const Transactions = require('../../models/Transactions');
+const Sequelize = require('sequelize');
+
 
 // 1. Get all users (View users in the admin dashboard)
 router.get('/users', adminAuth, async (req, res) => {
@@ -265,5 +267,24 @@ router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
       res.status(500).json({ error: 'Failed to retrieve top demand skills.' });
   }
 });*/
+
+// 3. Get all TRANSACTIONS on the platform
+// Get all transactions
+router.get('/transactions', async (req, res) => {
+  try {
+    const transactions = await Transactions.findAll({
+      include: [
+          { model: User, as: 'buyer', attributes: ['id', 'name', 'email'] },
+          { model: User, as: 'seller', attributes: ['id', 'name', 'email'] },
+          { model: Skills, as: 'skill', attributes: ['id', 'title', 'price'] }, 
+      ],
+      order: [['created_at', 'DESC']], // Sort by most recent transactions
+  });
+      res.status(200).json(transactions);
+  } catch (error) {
+      console.error('Error fetching transactions:', error);
+      res.status(500).json({ error: 'Internal server error.' });
+  }
+});
 
 module.exports = router;
