@@ -78,7 +78,7 @@ const Marketplace = () => {
                                 <Link   
                                     key={skill.id}
                                     to={`/skills/${skill.id}`} // Link to the single skill page
-                                    className="p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition duration-300"
+                                    className="p-4 bg-white rounded-lg shadow-md hover:shadow-2xl transition duration-300"
                                 >
                                     <h3 className="font-semibold text-lg">{skill.title}</h3>
                                     <p className="text-gray-500">
@@ -96,7 +96,7 @@ const Marketplace = () => {
                                         }
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
-                                    <p className="text-gray-700">Price: {skill.price} credits</p>
+                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.price} credits</p>
                                 </Link>
                             ))
                         ) : (

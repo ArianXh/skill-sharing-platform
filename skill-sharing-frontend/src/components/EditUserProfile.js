@@ -216,7 +216,7 @@ const EditProfile = () => {
               <li key={skill.id} className="p-2 border rounded bg-gray-100">
                 <p className="text-lg font-semibold">Title: {skill.title}</p>
                 <p>Description: {skill.description}</p>
-                <p>Price: ${skill.price}</p>
+                <p>Price: {skill.price} credits</p>
                 <p>Level: {skill.skill_level}</p>
               </li>
             ))}

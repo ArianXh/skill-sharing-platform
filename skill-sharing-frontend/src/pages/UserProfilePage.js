@@ -93,12 +93,12 @@ const UserProfilePage = () => {
                         {user.skills.map(skill => (
                             <div
                                 key={skill.id}
-                                className="p-4 border rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                                className="p-4 bg-white rounded-lg shadow-md hover:shadow-2xl transition duration-300"
                             >
                                 <Link to={`/skills/${skill.id}`} className="block">
                                     <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
                                     <p className="text-gray-600 mt-2">{skill.description}</p>
-                                    <p className="text-gray-800 font-semibold mt-2">Price: ${skill.price}</p>
+                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.price} credits</p>
                                     <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
                                     <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
                                 </Link>

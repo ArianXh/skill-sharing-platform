@@ -99,7 +99,8 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
     const skillId = req.params.id;
     const userId = req.user.id;
     const { rating, review_text } = req.body;
-  
+    console.log(`USER ID of review: ${userId}`);
+    
     try {
       // Check if the skill exists
       const skill = await Skills.findByPk(skillId, {
@@ -115,6 +116,10 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
         return res.status(404).json({ error: 'Skill not found' });
       }
   
+      // Prevent buyer from purchasing their own skill
+      if (userId === req.user.id) {
+        return res.status(400).json({ error: 'You cannot rate or review your own skill.' });
+    }
       // Create the review
       const newReview = await Review.create({
         rating: req.body.rating,
