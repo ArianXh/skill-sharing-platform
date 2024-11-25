@@ -63,7 +63,6 @@ router.get('/skills/:id', async (req, res) => {
 });
 
 
-// Add more routes here as needed, for example:
 // Create a new skill (POST /api/skills)
 router.post('/create', authMiddleware, async (req, res) => {
     const userId = req.user.id; // Using this to add a skill to THIS user (the one logged in)
@@ -92,6 +91,41 @@ router.post('/create', authMiddleware, async (req, res) => {
         console.error('Error creating skill:', error);
         res.status(500).json({ error: 'Server error' });
     }
+});
+
+// Update a skill (PUT /api/skills/:id)
+router.put('/skills/:id', authMiddleware, async (req, res) => {
+  const skillId = req.params.id;
+  const { title, description, price, category_id, skill_level } = req.body;
+
+  try {
+      const skill = await Skills.findByPk(skillId);
+
+      if (!skill) return res.status(404).json({ error: 'Skill not found' });
+
+      await skill.update({ title, description, price, category_id, skill_level });
+
+      res.status(200).json({ message: 'Skill updated successfully', skill });
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while updating the skill.' });
+  }
+});
+
+// Delete a skill (DELETE /api/skills/:id)
+router.delete('/skills/:id', authMiddleware, async (req, res) => {
+  const skillId = req.params.id;
+
+  try {
+      const skill = await Skills.findByPk(skillId);
+
+      if (!skill) return res.status(404).json({ error: 'Skill not found' });
+
+      await skill.destroy();
+
+      res.status(200).json({ message: 'Skill deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ error: 'An error occurred while deleting the skill.' });
+  }
 });
 
 // Add a review to a skill (POST /api/skills/:id/review)

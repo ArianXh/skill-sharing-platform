@@ -15,8 +15,13 @@ function PurchasesTab() {
                     },
                 });
                 setTransactions(response.data);
-            } catch (err) {
-                setError(err.response?.data?.error || 'Failed to fetch transactions.');
+                setLoading(false);
+            } catch (error) {
+                if (error.response && error.response.status === 403) {
+                  setError('Access denied. Admin privileges are required.');
+                } else {
+                  setError('Failed to retrieve transactons.');
+                }
             } finally {
                 setLoading(false);
             }

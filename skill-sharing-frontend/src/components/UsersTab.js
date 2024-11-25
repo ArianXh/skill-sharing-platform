@@ -26,13 +26,14 @@ function UsersTab() {
             setUsers(response.data);
             setLoading(false);
           } catch (error) {
-            if (error.response && error.response.status === 403) {
-              setError('Access denied. Admin privileges are required.');
-            } else {
-              setError('Failed to retrieve users.');
-            }
+              if (error.response && error.response.status === 403) {
+                setError('Access denied. Admin privileges are required.');
+              } else {
+                setError('Failed to retrieve users.');
+              }
+          } finally {
             setLoading(false);
-          }
+        }
         };
 
     fetchUsers();

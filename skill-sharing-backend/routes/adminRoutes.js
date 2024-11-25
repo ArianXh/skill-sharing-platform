@@ -270,7 +270,7 @@ router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
 
 // 3. Get all TRANSACTIONS on the platform
 // Get all transactions
-router.get('/transactions', async (req, res) => {
+router.get('/transactions', adminAuth, async (req, res) => {
   try {
     const transactions = await Transactions.findAll({
       include: [

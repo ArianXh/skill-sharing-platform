@@ -5,6 +5,8 @@ import Navbar from './Navbar';
 
 const EditProfile = () => {
   const [skills, setSkills] = useState([]);
+  const [editingSkillId, setEditingSkillId] = useState(null);
+  const [editSkillData, setEditSkillData] = useState({});
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -112,6 +114,58 @@ const EditProfile = () => {
     }
   };
 
+
+  const handleEditSkill = async (e) => {
+    //e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `http://localhost:5000/api/skills/skills/${editingSkillId}`,
+        { ...editSkillData },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const updatedSkills = skills.map((skill) =>
+        skill.id === editingSkillId ? response.data : skill
+      );
+      setSkills(updatedSkills);
+      setEditingSkillId(null);
+      setEditSkillData({});
+      setMessage('Skill updated successfully');
+    } catch (err) {
+      console.error('Error updating skill:', err);
+      setError('Failed to update skill');
+    }
+  };
+
+
+  const handleDeleteSkill = async (skillId) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`http://localhost:5000/api/skills/skills/${skillId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setSkills(skills.filter((skill) => skill.id !== skillId));
+      setMessage('Skill deleted successfully');
+    } catch (err) {
+      console.error('Error deleting skill:', err);
+      setError('Failed to delete skill');
+    }
+  };
+
+  const handleEditSkillChange = (e) => {
+    setEditSkillData({
+      ...editSkillData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
   return (
     <div>
       <Navbar />
@@ -209,18 +263,106 @@ const EditProfile = () => {
             </form>
           </div>
 
-          {/* Display Current Skills */}
-          <h3 className="text-xl font-bold mt-8 text-gray-800">Current Skills</h3>
-          <ul className="mt-4 space-y-2">
-            {skills.map((skill) => (
-              <li key={skill.id} className="p-2 border rounded bg-gray-100">
-                <p className="text-lg font-semibold">Title: {skill.title}</p>
-                <p>Description: {skill.description}</p>
-                <p>Price: {skill.price} credits</p>
-                <p>Level: {skill.skill_level}</p>
-              </li>
-            ))}
+          {/* Current Skills */}
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">Current Skills</h3>
+          <ul className="space-y-4">
+            {skills.map((skill) =>
+              editingSkillId === skill.id ? (
+                <li key={`editing-${skill.id}`} className="bg-gray-100 p-4 rounded-lg shadow">
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault(); // Prevent default form behavior
+                      handleEditSkill(skill.id, editSkillData).then((updatedSkill) => {
+                        // Update the skills list in the state
+                        setSkills((prevSkills) =>
+                          prevSkills.map((s) =>
+                            s.id === skill.id ? updatedSkill : s
+                          )
+                        );
+                        setEditingSkillId(null); // Exit editing mode
+                      });
+                    }}
+                    className="space-y-2"
+                  >
+                    <div>
+                      <label
+                        htmlFor="title"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Skill Title
+                      </label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={editSkillData.title || ''}
+                        onChange={handleEditSkillChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                      />
+                    </div>
+                    <div>
+                      <label
+                        htmlFor="description"
+                        className="block text-gray-700 font-medium mb-1"
+                      >
+                        Description
+                      </label>
+                      <textarea
+                        name="description"
+                        value={editSkillData.description || ''}
+                        onChange={handleEditSkillChange}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setEditingSkillId(null)}
+                        className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400 transition"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                </li>
+              ) : (
+                <li
+                  key={`skill-${skill.id}`}
+                  className="bg-white p-4 rounded-lg shadow flex items-center justify-between"
+                >
+                  <div>
+                    <h4 className="text-lg font-medium text-gray-800">{skill.title}</h4>
+                    <p className="text-gray-600">{skill.description}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => {
+                        setEditingSkillId(skill.id);
+                        setEditSkillData(skill);
+                      }}
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSkill(skill.id)}
+                      className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              )
+            )}
           </ul>
+
+
+
         </div>
       </div>
     </div>
