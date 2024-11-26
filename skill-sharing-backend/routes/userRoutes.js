@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
 
 // New User SignUp
 router.post('/signup', async (req, res) => {
-    const { name, email, password, role, bio, profile_image_url, experience, ratings_average} = req.body;
+    const { name, email, password, role, bio, profile_image_url, experience, ratings_average, credits} = req.body;
     try {
         // Check if the user already exists
         const userExists = await User.findOne({ where: { email } });
@@ -65,11 +65,12 @@ router.post('/signup', async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role,
+            role: 'user',
             bio,
             profile_image_url,
             experience,
             ratings_average,
+            credits: 100,
         });
 
         res.status(201).json(newUser);

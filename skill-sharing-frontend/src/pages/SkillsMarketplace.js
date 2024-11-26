@@ -13,9 +13,7 @@ const Marketplace = () => {
     useEffect(() => {
         const fetchSkills = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/skills/skills', {
-                    params: { category, skill_level: skillLevel, search },
-                });
+                const response = await axios.get('http://localhost:5000/api/skills/skills', { category, skill_level: skillLevel, search },);
                 setSkills(response.data);
             } catch (error) {
                 console.error('Error fetching skills:', error);

@@ -9,9 +9,10 @@ function PurchasesTab() {
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
+                const token = localStorage.getItem('token');
                 const response = await axios.get('http://localhost:5000/api/admin/transactions', {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 setTransactions(response.data);

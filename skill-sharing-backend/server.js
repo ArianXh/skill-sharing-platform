@@ -6,6 +6,8 @@ const userRoutes = require('./routes/userRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const postsRoutes = require('./routes/postsRoutes');
+const commentsRoutes = require('./routes/commentsRoutes');
 
 require('dotenv').config();
 
@@ -22,6 +24,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/transactions', transactionRoutes);
+app.use('/api/posts', postsRoutes);
+app.use('/api/comments', commentsRoutes);
 
 // Basic route
 app.get('/', (req, res) => {

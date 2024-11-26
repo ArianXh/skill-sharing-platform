@@ -61,6 +61,7 @@ const Navbar = () => {
                             <Link to="/" className={getLinkClass('/')}>Home</Link>
                             <Link to="/explore" className={getLinkClass('/explore')}>Explore</Link>
                             <Link to="/marketplace" className={getLinkClass('/marketplace')}>Marketplace</Link>
+                            <Link to="/community" className={getLinkClass('/community')}>Community</Link>
                             <Link to="/about" className={getLinkClass('/about')}>About</Link>
                             <Link to="/contact" className={getLinkClass('/contact')}>Contact</Link>
                         </div>

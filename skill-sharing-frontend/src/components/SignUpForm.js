@@ -92,21 +92,7 @@ const SignUpForm = () => {
                 required
               />
             </div>
-            {/* Role */}
-            <div className="mb-4">
-              <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
-              <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleSignUpChange}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                required
-              >
-                <option value="Learner">Learner</option>
-                <option value="Trainer">Trainer</option>
-              </select>
-            </div>
+            
             {/* Bio */}
             <div className="mb-4">
               <label htmlFor="bio" className="block text-sm font-medium text-gray-700">Bio</label>

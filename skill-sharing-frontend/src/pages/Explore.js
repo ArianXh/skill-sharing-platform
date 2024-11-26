@@ -17,9 +17,7 @@ const Explore = () => {
                                 <p className="text-gray-600">
                                     Explore various {category.toLowerCase()} resources, tutorials, and classes curated just for you.
                                 </p>
-                                <a href="#"
-                                    className="mt-4 inline-block text-blue-600 font-semibold hover:text-blue-500"
-                                >
+                                <a href="#"className="mt-4 inline-block text-blue-600 font-semibold hover:text-blue-500">
                                     Learn More
                                 </a>
                             </div>

@@ -175,7 +175,5 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
   });
 
 // Fetch all reviews for a specific skill (GET /api/skills/:id/reviews)
-// Update a skill (PUT /api/skills/:id)
-// Delete a skill (DELETE /api/skills/:id)
 
 module.exports = router;

@@ -36,13 +36,10 @@ function SingleSkill() {
     const handleAddReview = async (e) => {
         e.preventDefault();
         try {
-            console.log("Rating submitted: ", rating);
-            const response = await axios.post(
-                `http://localhost:5000/api/skills/skills/${id}/review`,
-                { review_text: reviewText, rating },
-                {
+            const token = localStorage.getItem('token');
+            const response = await axios.post(`http://localhost:5000/api/skills/skills/${id}/review`, { review_text: reviewText, rating }, {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                        Authorization: `Bearer ${token}`
                     }
                 }
             );
@@ -58,19 +55,13 @@ function SingleSkill() {
         }
     };
 
-    //const decodedToken = jwtDecode(token);
-    //console.log(decodedToken.user);
-    //if (decodedToken.user.role !== 'admin') {
     // Handle Purchase Skill
     const handlePurchase = async () => {
         try {
             const token = localStorage.getItem('token'); 
             const decodedToken = jwtDecode(token);
             const buyerId = decodedToken.user.id;
-            const response = await axios.post(
-                'http://localhost:5000/api/transactions', 
-                { buyerId, skillId: id },
-                {
+            const response = await axios.post('http://localhost:5000/api/transactions', { buyerId, skillId: id }, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

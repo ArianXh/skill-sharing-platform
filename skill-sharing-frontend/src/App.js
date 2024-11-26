@@ -15,6 +15,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Unauthorized from './pages/Unauthorized';
 import AdminRoute from './routes/AdminRoute';
 import AdminDashboard from './pages/AdminDashboard';
+import CommunityPage from './pages/CommunityPage';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/unauthorized" element={< Unauthorized />} />
         <Route path='/signup' element={< SignUpForm />} />
         <Route path='/marketplace' element={< SkillsMarketplace /> } />
+        <Route path='/community' element={< CommunityPage /> } />
         <Route path='/login' element={< LoginForm />} />
         <Route path='/explore' element={< Explore /> } />
         <Route path='/about' element={< About /> } />
