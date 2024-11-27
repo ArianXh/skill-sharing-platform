@@ -21,7 +21,9 @@ const Marketplace = () => {
         };
         fetchSkills();
     }, [category, skillLevel, search]);
-
+    console.log(`Category: ${category}`)
+    console.log(`Skill Level: ${skillLevel}`)
+    console.log(`Search: ${search}`)
     return (
         <div>
             <Navbar />
