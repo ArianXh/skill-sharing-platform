@@ -10,6 +10,7 @@ const AnalyticsTab = () => {
   });
   const [skillsAddedPerDay, setSkillsAddedPerDay] = useState([]);
   const [reviewsAddedPerDay, setReviewsAddedPerDay] = useState([]);
+  const [transactionsMadePerDay, setTransactionsMadePerDay] = useState([]);
   const [skillsByCategory, setSkillsByCategory] = useState([]);
 
   const [topCategories, setTopCategories] = useState([]);
@@ -75,24 +76,26 @@ const AnalyticsTab = () => {
                   headers: {
                       Authorization: `Bearer ${token}`,
                   },
-              }).then(res => res.json()), /*
+              }).then(res => res.json()), 
               fetch("http://localhost:5000/api/admin/analytics/top-demand-skills", {
                   headers: {
                       Authorization: `Bearer ${token}`,
                   },
-              }).then(res => res.json()),*/
+              }).then(res => res.json()),
           ]);
           setTopCategories(categoriesRes);
           setSkillsGrowth(growthRes);
           setPricingTrends(pricingRes);
-          //setTopDemandSkills(demandRes);
+          setTopDemandSkills(demandRes);
       } catch (error) {
-          console.error('Failed to fetch analytics data:', error);
-      }
+        if (error.response && error.response.status === 403) {
+          setError('Access denied. Admin privileges are required.');
+        } else {
+          setError('Failed to retrieve analytics.');
+        }
   };
+}
   
-
-
     const fetchSkillsAddedPerDay = async () => {
       try {
         const token = localStorage.getItem('token');
@@ -133,6 +136,26 @@ const AnalyticsTab = () => {
       }
     };
 
+    const fetchTransactionsMadePerDay = async () => {
+      try {
+        const token = localStorage.getItem('token');
+            
+        // Check if token is null or undefined
+        if (!token) {
+          throw new Error("No token found in localStorage.");
+        }
+        const response = await fetch("http://localhost:5000/api/admin/analytics/transactions-made-per-day", {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        const data = await response.json();
+        setTransactionsMadePerDay(data);
+      } catch (error) {
+        console.error('Failed to fetch transactions made per day', error);
+      }
+    };
+
 
     const fetchSkillsByCategory = async () => {
         try {
@@ -157,6 +180,7 @@ const AnalyticsTab = () => {
     fetchAnalytics();
     fetchSkillsAddedPerDay();
     fetchReviewsAddedPerDay();
+    fetchTransactionsMadePerDay();
     fetchSkillsByCategory();
     fetchMetrics();
   }, []);
@@ -180,12 +204,6 @@ const AnalyticsTab = () => {
         <p className="text-2xl font-bold text-green-500">{analytics.numberOfSkills}</p>
       </div>
 
-      {/* Transactions Per Day */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Transactions Per Day</h2>
-        <p className="text-2xl font-bold text-orange-500">{}</p>
-      </div>
-
       {/* Reviews Per Day */}
       <div className="p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Reviews Added Per Day</h2>
@@ -194,6 +212,19 @@ const AnalyticsTab = () => {
             <li key={index} className="flex justify-between items-center py-2">
               <span className="text-gray-700 font-medium">{entry.date}</span>
               <span className="text-sm text-gray-500">{entry.count} Reviews</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* Transactions Per Day */}
+      <div className="p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Transactions Made Per Day</h2>
+        <ul className="divide-y divide-gray-200">
+          {transactionsMadePerDay.map((entry, index) => (
+            <li key={index} className="flex justify-between items-center py-2">
+              <span className="text-gray-700 font-medium">{entry.date}</span>
+              <span className="text-sm text-gray-500">{entry.count} Transactions</span>
             </li>
           ))}
         </ul>
@@ -272,20 +303,17 @@ const AnalyticsTab = () => {
         </div>
         
         {/* Top Demand Skills */}
-        <div className="p-6 bg-white rounded shadow">
-            <h2 className="text-lg font-semibold text-gray-600">Top Demand Skills</h2>
-            <ul>
+        <div className="p-6 bg-white rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Demand Skills</h2>
+            <ul className="divide-y divide-gray-200">
                 {topDemandSkills.map((skill) => (
-                    <li key={skill.id} className="flex justify-between">
-                        <span>{skill.title}</span>
-                        <span>{skill.review_count} Reviews</span>
+                    <li key={skill.id} className="flex justify-between items-center py-2">
+                        <span className="text-gray-700 font-medium">{skill.skill.title}</span>
+                        <span className="text-sm text-gray-500">{skill.skill_count} Sold</span>
                     </li>
                 ))}
             </ul>
         </div>
-
-
-
 
     </div>
   );

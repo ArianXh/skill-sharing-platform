@@ -87,34 +87,10 @@ router.get('/analytics', adminAuth, async (req, res) => {
       console.log(`Number of users: ${numberOfUsers}`);
       const numberOfSkills = await Skills.count();
       console.log(`Number of skills: ${numberOfSkills}`);
-      /*const transactionsPerDay = await Transaction.count({
-        where: {
-          createdAt: {
-            [Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's transactions
-          },
-        },
-      });
-      const reviewsPerDay = await Review.count({
-        where: {
-          created_at: {
-            //[Sequelize.Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's reviews
-          },
-        },
-      });
-      const skillsAddedPerDay = await Skills.count({
-        where: {
-          created_at: {
-            //[Sequelize.Op.gte]: new Date().setHours(0, 0, 0, 0), // Today's skills
-          },
-        },
-      });
-        */
+      
       res.json({
         numberOfUsers,
         numberOfSkills,
-        //transactionsPerDay,
-        //reviewsPerDay,
-        //skillsAddedPerDay,
       });
     } catch (error) {
       console.error("Error in analytics route: ", error);
@@ -122,7 +98,7 @@ router.get('/analytics', adminAuth, async (req, res) => {
     }
 });
 
-// 6. Get skills count by category
+// 5.1 Get skills count by category
 router.get('/analytics/skills-by-category', adminAuth, async (req, res) => {
   try {
       const skillsByCategory = await Skills.findAll({
@@ -148,7 +124,7 @@ router.get('/analytics/skills-by-category', adminAuth, async (req, res) => {
 });
 
 
-// 7. Get skills added per day
+// 5.2 Get skills added per day
 router.get('/analytics/skills-added-per-day', adminAuth, async (req, res) => {
   try {
     const skillsAddedPerDay = await Skills.findAll({
@@ -167,7 +143,7 @@ router.get('/analytics/skills-added-per-day', adminAuth, async (req, res) => {
 });
 
 
-// 8. Get reviews added per day
+// 5.3 Get reviews added per day
 router.get('/analytics/reviews-added-per-day', adminAuth, async (req, res) => {
   try {
     const reviewsAddedPerDay = await Review.findAll({
@@ -180,6 +156,24 @@ router.get('/analytics/reviews-added-per-day', adminAuth, async (req, res) => {
     });
 
     res.json(reviewsAddedPerDay);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to retrieve reviews added per day.' });
+  }
+});
+
+// 5.4. Get transactions made per day
+router.get('/analytics/transactions-made-per-day', adminAuth, async (req, res) => {
+  try {
+    const transactionsMadePerDay = await Transactions.findAll({
+      attributes: [
+        [Sequelize.fn('DATE', Sequelize.col('created_at')), 'date'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'count'],
+      ],
+      group: [Sequelize.fn('DATE', Sequelize.col('created_at'))],
+      order: [[Sequelize.fn('DATE', Sequelize.col('created_at')), 'DESC']],
+    });
+
+    res.json(transactionsMadePerDay);
   } catch (error) {
     res.status(500).json({ error: 'Failed to retrieve reviews added per day.' });
   }
@@ -246,27 +240,38 @@ router.get('/analytics/skill-pricing-trends', adminAuth, async (req, res) => {
   }
 });
 
-/*
+
 // 12. Get Skills with the Highest Demand
 router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
   try {
-    const topDemandSkills = await Skills.findAll({
+    const topDemandSkills = await Transactions.findAll({
       attributes: [
-          'id', 'title',
-          [Sequelize.fn('COUNT', Sequelize.col('reviews.id')), 'review_count']
+        'skill_id', // Include the skill_id for grouping
+        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'skill_count'] // Count transactions for each skill
       ],
       include: [
-          { model: Review, as: 'reviews', attributes: ['id'] }
+        {
+          model: Skills,
+          as: 'skill', // Use the alias defined in your associations
+          attributes: ['id', 'title'] // Include skill details like id and title
+        }
       ],
-      group: ['Skills.id', 'Skills.title', 'Review.id'], // Include title in the group
-      order: [[Sequelize.fn('COUNT', Sequelize.col('reviews.id')), 'DESC']],
-      limit: 10,
-  });
-      res.json(topDemandSkills);
+      group: ['skill_id', 'skill.id', 'skill.title'], // Group by skill_id and skill.title
+      order: [
+        [Sequelize.col('skill.title'), 'DESC'], // Order by skill title alphabetically
+        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'ASC'] // Secondary order by transaction count
+      ],
+      limit: 10 // Limit to top 10 results
+    });
+
+    res.json(topDemandSkills); // Return the result as JSON
   } catch (error) {
-      res.status(500).json({ error: 'Failed to retrieve top demand skills.' });
+    console.error('Error fetching top-demand skills:', error);
+    res.status(500).json({ error: 'Failed to retrieve top-demand skills.' });
   }
-});*/
+});
+
+
 
 // 3. Get all TRANSACTIONS on the platform
 // Get all transactions
