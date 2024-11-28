@@ -12,6 +12,7 @@ function SingleSkill() {
     const [message, setMessage] = useState('');
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+    const token = localStorage.getItem('token'); 
 
     useEffect(() => {
         const fetchSkill = async () => {
@@ -112,7 +113,11 @@ function SingleSkill() {
                         )}
                     </div>
                 </div>
-                {/* Add Review Form */}
+
+                 {/* Add Review Section */}
+
+                 {token ? (
+
                 <div className="mt-6">
                     <h3 className="text-xl font-semibold text-gray-800">Add a Review</h3>
                     <form onSubmit={handleAddReview} className="mt-4">
@@ -136,12 +141,20 @@ function SingleSkill() {
                             <option value={4}>4 Stars</option>
                             <option value={5}>5 Stars</option>
                         </select>
+
                         <button type="submit" className="px-4 py-2 mt-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-400 focus:outline-none">
                             Submit Review
                         </button>
                     </form>
                     {message && <p className="mt-2 text-blue-500">{message}</p>}
                 </div>
+
+                ) : (
+
+                <p className="mt-6 text-gray-500">Log in to leave a review!</p>
+                
+                )}
+
             </div>
         </div>
     );
