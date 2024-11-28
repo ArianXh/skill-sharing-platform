@@ -1,320 +1,81 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+
+// Import your analytic components
+import Metrics from "./analytics/Metrics";
+import PerDay from "./analytics/PerDay";
+import BasicAnalytics from "./analytics/BasicAnalytics";
+import SkillsAnalytics from "./analytics/SkillsAnalytics";
 
 const AnalyticsTab = () => {
-  const [analytics, setAnalytics] = useState({
-    numberOfUsers: 0,
-    numberOfSkills: 0,
-    //transactionsPerDay: 0,
-    //reviewsPerDay: 0,
-    //skillsAddedPerDay: 0,
-  });
-  const [skillsAddedPerDay, setSkillsAddedPerDay] = useState([]);
-  const [reviewsAddedPerDay, setReviewsAddedPerDay] = useState([]);
-  const [transactionsMadePerDay, setTransactionsMadePerDay] = useState([]);
-  const [skillsByCategory, setSkillsByCategory] = useState([]);
+  // State to track which component should render
+  const [activeTab, setActiveTab] = useState("BasicAnalytics");
 
-  const [topCategories, setTopCategories] = useState([]);
-  const [skillsGrowth, setSkillsGrowth] = useState([]);
-  const [pricingTrends, setPricingTrends] = useState([]);
-  const [topDemandSkills, setTopDemandSkills] = useState([]);
-
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            
-            // Check if token is null or undefined
-            if (!token) {
-              throw new Error("No token found in localStorage.");
-            }
-    
-            const response = await fetch("http://localhost:5000/api/admin/analytics", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-    
-            if (!response.ok) {
-                console.error(`Error: ${response.status} - ${response.statusText}`);
-                throw new Error("Failed to fetch analytics data");
-            }
-    
-            const data = await response.json();
-            console.log("Fetched Analytics Data:", data); // Log fetched data
-            setAnalytics(data);
-            setLoading(false);
-
-        } catch (error) {
-            if (error.response && error.response.status === 403) {
-              setError('Access denied. Admin privileges are required.');
-            } else {
-              setError('Failed to retrieve analytics.');
-            }
-            setLoading(false);
-          }
-    };
-
-    const fetchMetrics = async () => {
-      try {
-          const token = localStorage.getItem('token'); // Adjust token retrieval as per your app's logic
-  
-          const [categoriesRes, growthRes, pricingRes, demandRes] = await Promise.all([
-              fetch("http://localhost:5000/api/admin/analytics/top-skill-categories", {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              }).then(res => res.json()), 
-              fetch("http://localhost:5000/api/admin/analytics/skills-growth", {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              }).then(res => res.json()),
-              fetch("http://localhost:5000/api/admin/analytics/skill-pricing-trends", {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              }).then(res => res.json()), 
-              fetch("http://localhost:5000/api/admin/analytics/top-demand-skills", {
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-              }).then(res => res.json()),
-          ]);
-          setTopCategories(categoriesRes);
-          setSkillsGrowth(growthRes);
-          setPricingTrends(pricingRes);
-          setTopDemandSkills(demandRes);
-      } catch (error) {
-        if (error.response && error.response.status === 403) {
-          setError('Access denied. Admin privileges are required.');
-        } else {
-          setError('Failed to retrieve analytics.');
-        }
+  // Function to render the correct component based on the active tab
+  const renderActiveComponent = () => {
+    switch (activeTab) {
+      case "BasicAnalytics":
+        return <BasicAnalytics />;
+      case "PerDay":
+        return <PerDay />;
+      case "SkillsAnalytics":
+        return <SkillsAnalytics />;
+      case "Metrics":
+        return <Metrics />;
+      default:
+        return <BasicAnalytics />;
+    }
   };
-}
-  
-    const fetchSkillsAddedPerDay = async () => {
-      try {
-        const token = localStorage.getItem('token');
-            
-        // Check if token is null or undefined
-        if (!token) {
-          throw new Error("No token found in localStorage.");
-        }
-        const response = await fetch("http://localhost:5000/api/admin/analytics/skills-added-per-day", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const data = await response.json();
-        setSkillsAddedPerDay(data);
-      } catch (error) {
-        console.error('Failed to fetch skills added per day', error);
-      }
-    };
-    
-    const fetchReviewsAddedPerDay = async () => {
-      try {
-        const token = localStorage.getItem('token');
-            
-        // Check if token is null or undefined
-        if (!token) {
-          throw new Error("No token found in localStorage.");
-        }
-        const response = await fetch("http://localhost:5000/api/admin/analytics/reviews-added-per-day", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const data = await response.json();
-        setReviewsAddedPerDay(data);
-      } catch (error) {
-        console.error('Failed to fetch reviews added per day', error);
-      }
-    };
-
-    const fetchTransactionsMadePerDay = async () => {
-      try {
-        const token = localStorage.getItem('token');
-            
-        // Check if token is null or undefined
-        if (!token) {
-          throw new Error("No token found in localStorage.");
-        }
-        const response = await fetch("http://localhost:5000/api/admin/analytics/transactions-made-per-day", {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        const data = await response.json();
-        setTransactionsMadePerDay(data);
-      } catch (error) {
-        console.error('Failed to fetch transactions made per day', error);
-      }
-    };
-
-
-    const fetchSkillsByCategory = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            
-            // Check if token is null or undefined
-            if (!token) {
-              throw new Error("No token found in localStorage.");
-            }
-            const response = await fetch("http://localhost:5000/api/admin/analytics/skills-by-category", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            const data = await response.json();
-            setSkillsByCategory(data);
-        } catch (error) {
-            console.error("Failed to fetch skills by category", error);
-        }
-    };
-
-    fetchAnalytics();
-    fetchSkillsAddedPerDay();
-    fetchReviewsAddedPerDay();
-    fetchTransactionsMadePerDay();
-    fetchSkillsByCategory();
-    fetchMetrics();
-  }, []);
-
-  if (loading) return <p>Loading analytics...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-700">Analytics</h1>
-      
-      {/* Number of Users */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Total Number of Users</h2>
-        <p className="text-2xl font-bold text-blue-500">{analytics.numberOfUsers}</p>
+    <div className="analytics-tab mx-auto max-w-4xl p-4">
+      {/* Navigation for the tabs */}
+      <div className="tab-navigation flex space-x-4 border-b-2 border-gray-300 pb-2 mb-4">
+        <button
+          className={`tab-button px-4 py-2 text-sm rounded-md ${
+            activeTab === "BasicAnalytics"
+              ? "bg-indigo-600 text-white font-semibold"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setActiveTab("BasicAnalytics")}
+        >
+          Basic Analytics
+        </button>
+        <button
+          className={`tab-button px-4 py-2 text-sm rounded-md ${
+            activeTab === "PerDay"
+              ? "bg-indigo-600 text-white font-semibold"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setActiveTab("PerDay")}
+        >
+          Per Day
+        </button>
+        <button
+          className={`tab-button px-4 py-2 text-sm rounded-md ${
+            activeTab === "SkillsAnalytics"
+              ? "bg-indigo-600 text-white font-semibold"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setActiveTab("SkillsAnalytics")}
+        >
+          Skills Analytics
+        </button>
+        <button
+          className={`tab-button px-4 py-2 text-sm rounded-md ${
+            activeTab === "Metrics"
+              ? "bg-indigo-600 text-white font-semibold"
+              : "text-gray-600 hover:bg-gray-100"
+          }`}
+          onClick={() => setActiveTab("Metrics")}
+        >
+          Metrics
+        </button>
       </div>
 
-      {/* Number of Skills */}
-      <div className="bg-white shadow rounded-lg p-4">
-        <h2 className="text-lg font-semibold text-gray-600">Total Number of Skills</h2>
-        <p className="text-2xl font-bold text-green-500">{analytics.numberOfSkills}</p>
+      {/* Render the selected component */}
+      <div className="tab-content mt-4 p-6 bg-gray-50 border border-gray-200 rounded-md shadow-sm">
+        {renderActiveComponent()}
       </div>
-
-      {/* Reviews Per Day */}
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Reviews Added Per Day</h2>
-        <ul className="divide-y divide-gray-200">
-          {reviewsAddedPerDay.map((entry, index) => (
-            <li key={index} className="flex justify-between items-center py-2">
-              <span className="text-gray-700 font-medium">{entry.date}</span>
-              <span className="text-sm text-gray-500">{entry.count} Reviews</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Transactions Per Day */}
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Transactions Made Per Day</h2>
-        <ul className="divide-y divide-gray-200">
-          {transactionsMadePerDay.map((entry, index) => (
-            <li key={index} className="flex justify-between items-center py-2">
-              <span className="text-gray-700 font-medium">{entry.date}</span>
-              <span className="text-sm text-gray-500">{entry.count} Transactions</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      {/* Skills Added Per Day */}
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Added Per Day</h2>
-        <ul className="divide-y divide-gray-200">
-          {skillsAddedPerDay.map((entry, index) => (
-            <li key={index} className="flex justify-between items-center py-2">
-              <span className="text-gray-700 font-medium">{entry.date}</span>
-              <span className="text-sm text-gray-500">{entry.count} Skills</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills by Category</h2>
-        <ul className="divide-y divide-gray-200">
-          {skillsByCategory.map((category) => (
-            <li
-              key={category.category_id}
-              className="flex justify-between items-center py-2"
-            >
-              <span className="text-gray-700 font-medium">{category.categories.name}</span>
-              <span className="text-sm text-gray-500">{category.count} Skills</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-
-
-        {/* Top Categories */}
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Skills by Category</h2>
-          <ul className="divide-y divide-gray-200">
-            {topCategories.map((category) => (
-              <li
-                key={category.category_id}
-                className="flex justify-between items-center py-2"
-              >
-                <span className="text-gray-700 font-medium">{category.categories.name}</span>
-                <span className="text-sm text-gray-500">{category.skill_count} Skills</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Pricing Trends */}
-        <div className="p-6 bg-white rounded-lg shadow-md">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Skill Pricing Trends by Category</h2>
-          <ul>
-            {pricingTrends.map((trend) => (
-              <li key={trend.category_id} className="flex justify-between items-center py-2">
-                <span className="text-gray-700 font-medium">{trend.categories.name}</span>
-                <span className="text-sm text-gray-500">{isNaN(parseFloat(trend.average_price)) ? 'N/A' : parseFloat(trend.average_price).toFixed(2)} credits</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Skills Growth */}
-        <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Skills Growth Over Time</h2>
-            <ul className="divide-y divide-gray-200">
-                {skillsGrowth.map((growth, index) => (
-                    <li key={index} className="flex justify-between items-center py-2">
-                        <span className="text-gray-700 font-medium">{new Date(growth.month).toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                        <span className="text-sm text-gray-500">{growth.skill_count} Skills</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-        
-        {/* Top Demand Skills */}
-        <div className="p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Demand Skills</h2>
-            <ul className="divide-y divide-gray-200">
-                {topDemandSkills.map((skill) => (
-                    <li key={skill.id} className="flex justify-between items-center py-2">
-                        <span className="text-gray-700 font-medium">{skill.skill.title}</span>
-                        <span className="text-sm text-gray-500">{skill.skill_count} Sold</span>
-                    </li>
-                ))}
-            </ul>
-        </div>
-
     </div>
   );
 };

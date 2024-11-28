@@ -6,6 +6,8 @@ const Skills = require('../../models/Skills');
 const Review = require('../../models/Review');
 const Categories = require('../../models/Categories');
 const Transactions = require('../../models/Transactions');
+const Post = require('../../models/Post');
+const Comment = require('../../models/Comment');
 const Sequelize = require('sequelize');
 
 
@@ -81,16 +83,37 @@ router.delete('/user/:id', adminAuth, async (req, res) => {
 
 
 // 5. Analytics
-router.get('/analytics', adminAuth, async (req, res) => {
+router.get('/basic-analytics', adminAuth, async (req, res) => {
     try {
       const numberOfUsers = await User.count();
       console.log(`Number of users: ${numberOfUsers}`);
+
       const numberOfSkills = await Skills.count();
       console.log(`Number of skills: ${numberOfSkills}`);
+
+      const numberOfCategories = await Categories.count();
+      console.log(`Number of categories: ${numberOfCategories}`);
+
+      const numberOfReviews = await Review.count();
+      console.log(`Number of reviews: ${numberOfReviews}`);
+
+      const numberOfPosts = await Post.count();
+      console.log(`Number of posts: ${numberOfPosts}`);
+
+      const numberOfComments = await Comment.count();
+      console.log(`Number of comments: ${numberOfComments}`);
+
+      const numberOfTransactions = await Transactions.count();
+      console.log(`Number of transactions: ${numberOfTransactions}`);
       
       res.json({
         numberOfUsers,
         numberOfSkills,
+        numberOfCategories,
+        numberOfReviews,
+        numberOfPosts,
+        numberOfComments,
+        numberOfTransactions
       });
     } catch (error) {
       console.error("Error in analytics route: ", error);
