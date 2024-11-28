@@ -39,20 +39,20 @@ router.post('/', async (req, res) => {
 
 
         // Check if buyer has enough credits
-        if (buyer.credits < skill.price) {
+        if (buyer.credits < skill.hourly_rate) {
             return res.status(400).json({ error: 'Insufficient credits to purchase this skill.' });
         }
 
         const transaction = await sequelize.transaction(async (t) => {
             // Deduct credits from buyer
             await buyer.update(
-                { credits: Math.round(Number(buyer.credits) - Number(skill.price)) }, // Force conversion to number
+                { credits: Math.round(Number(buyer.credits) - Number(skill.hourly_rate)) }, // Force conversion to number
                 { transaction: t }
             );
         
             // Add credits to seller
             await seller.update(
-                { credits: Math.round(Number(seller.credits) + Number(skill.price)) }, // Force conversion to number
+                { credits: Math.round(Number(seller.credits) + Number(skill.hourly_rate)) }, // Force conversion to number
                 { transaction: t }
             );
             
@@ -62,7 +62,7 @@ router.post('/', async (req, res) => {
                     buyer_id: buyerId,
                     seller_id: sellerId,
                     skill_id: skillId,
-                    amount: Math.round(skill.price),
+                    amount: Math.round(skill.hourly_rate),
                 },
                 { transaction: t }
             );

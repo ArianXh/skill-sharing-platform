@@ -21,7 +21,7 @@ router.get('/skills', async (req, res) => {
 
     try {
         const skills = await Skills.findAll({
-            attributes: ['id', 'user_id', 'title', 'description', 'price', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average'],
+            attributes: ['id', 'user_id', 'title', 'description', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average', 'hourly_rate'],
             where: filters,
             order: [['popularity_score', 'DESC']]
         });
@@ -38,7 +38,7 @@ router.get('/skills/:id', async (req, res) => {
     const skillId = req.params.id;
     try {
         const skill = await Skills.findByPk(skillId, {
-            attributes: ['id', 'user_id', 'title', 'description', 'price', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average'],
+            attributes: ['id', 'user_id', 'title', 'description', 'created_at', 'updated_at', 'category_id', 'skill_level', 'popularity_score', 'ratings_average', 'hourly_rate'],
             include: [
                 {
                     model: User,
@@ -66,7 +66,7 @@ router.get('/skills/:id', async (req, res) => {
 // Create a new skill (POST /api/skills)
 router.post('/create', authMiddleware, async (req, res) => {
     const userId = req.user.id; // Using this to add a skill to THIS user (the one logged in)
-    const { title, description, price, skill_level, popularity_score, category_id } = req.body;
+    const { title, description, skill_level, popularity_score, category_id, hourly_rate } = req.body;
     try {
 
         // Ensure category_id exists
@@ -79,11 +79,11 @@ router.post('/create', authMiddleware, async (req, res) => {
         const newSkill = await Skills.create({
             title,
             description,
-            price,
             skill_level,
             popularity_score,
             user_id: userId,
             category_id,
+            hourly_rate,
         });
         console.log(`NEW SKILL: ${newSkill}`);
         res.status(201).json(newSkill);

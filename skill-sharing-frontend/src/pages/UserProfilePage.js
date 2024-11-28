@@ -90,7 +90,7 @@ const UserProfilePage = () => {
                 <div className="mt-10">
                     <h2 className="text-3xl font-bold text-gray-800 mb-6">Your Skills</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {user.skills.map(skill => (
+                    {user.skills.map(skill => (
                             <div
                                 key={skill.id}
                                 className="p-4 bg-white rounded-lg shadow-md hover:shadow-2xl transition duration-300"
@@ -98,7 +98,7 @@ const UserProfilePage = () => {
                                 <Link to={`/skills/${skill.id}`} className="block">
                                     <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
                                     <p className="text-gray-600 mt-2">{skill.description}</p>
-                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.price} credits</p>
+                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.hourly_rate} credits / hour</p>
                                     <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
                                     <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
                                 </Link>

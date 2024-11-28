@@ -97,7 +97,7 @@ const Marketplace = () => {
                                         }
                                     </p>
                                     <p className="text-gray-700">Level: {skill.skill_level}</p>
-                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.price} credits</p>
+                                    <p className="text-blue-600 font-semibold mt-2">Price: {skill.hourly_rate} credits / hour</p>
                                 </Link>
                             ))
                         ) : (

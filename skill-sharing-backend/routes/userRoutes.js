@@ -89,7 +89,7 @@ router.get('/profile', authMiddleware, async (req, res) => {
             include: [{
                 model: Skills,
                 as: 'skills',
-                attributes: ['id', 'user_id', 'title', 'description', 'price', 'skill_level', 'popularity_score'],
+                attributes: ['id', 'user_id', 'title', 'description', 'skill_level', 'popularity_score', 'hourly_rate'],
             }],
         });
 

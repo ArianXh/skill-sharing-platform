@@ -250,7 +250,7 @@ router.get('/analytics/skill-pricing-trends', adminAuth, async (req, res) => {
     const pricingTrends = await Skills.findAll({
       attributes: [
           'category_id',
-          [Sequelize.fn('AVG', Sequelize.col('Skills.price')), 'average_price']
+          [Sequelize.fn('AVG', Sequelize.col('Skills.hourly_rate')), 'average_price']
       ],
       include: [
           { model: Categories, as: 'categories', attributes: ['id', 'name'] }
@@ -304,7 +304,7 @@ router.get('/transactions', adminAuth, async (req, res) => {
       include: [
           { model: User, as: 'buyer', attributes: ['id', 'name', 'email'] },
           { model: User, as: 'seller', attributes: ['id', 'name', 'email'] },
-          { model: Skills, as: 'skill', attributes: ['id', 'title', 'price'] }, 
+          { model: Skills, as: 'skill', attributes: ['id', 'title', 'hourly_rate'] }, 
       ],
       order: [['created_at', 'DESC']], // Sort by most recent transactions
   });

@@ -27,10 +27,6 @@ const Skills = sequelize.define('Skills', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  price: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-  },
   category_id: {
     type: DataTypes.INTEGER,
     allowNull: true,
@@ -50,6 +46,11 @@ const Skills = sequelize.define('Skills', {
   ratings_average: {
     type: DataTypes.FLOAT,
     allowNull: true,
+    defaultValue: 0,
+  },
+  hourly_rate: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
     defaultValue: 0,
   },
 }, {

@@ -88,7 +88,7 @@ function SingleSkill() {
                 <div className="bg-white p-8 rounded-lg shadow-lg">
                     <h1 className="text-3xl font-bold text-gray-800">{skill.title}</h1>
                     <p className="text-lg text-gray-600 mt-4">{skill.description}</p>
-                    <p className="mt-4 text-xl font-semibold text-gray-700">Price: ${skill.price}</p>
+                    <p className="mt-4 text-xl font-semibold text-gray-700">Price: {skill.hourly_rate} credits / hour</p>
                     <p className="mt-2 text-gray-500">Skill Level: {skill.skill_level}</p>
                     <p className="mt-2 text-gray-500">Posted by: {skill.user.name} ({skill.user.email})</p>
                     <button

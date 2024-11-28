@@ -19,7 +19,7 @@ const EditProfile = () => {
   const [skillData, setSkillData] = useState({
     title: '',
     description: '',
-    price: '',
+    hourly_rate: '',
     skill_level: '',
   });
   const navigate = useNavigate();
@@ -106,7 +106,7 @@ const EditProfile = () => {
         }
       );
       setSkills([...skills, response.data]);
-      setSkillData({ title: '', description: '', price: '' , skill_level: '' });
+      setSkillData({ title: '', description: '', skill_level: '', hourly_rate: '' });
       setMessage('Skill added successfully');
     } catch (err) {
       console.error('Error adding skill:', err);
@@ -224,8 +224,8 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <label htmlFor="price" className="block text-gray-700 font-medium mb-2">Price</label>
-                <input type="number" name="price" id="price" value={skillData.price} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill price" required />
+                <label htmlFor="hourly_rate" className="block text-gray-700 font-medium mb-2">Hourly Rate</label>
+                <input type="number" name="hourly_rate" id="hourly_rate" value={skillData.hourly_rate} onChange={handleSkillChange} className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter skill hourly rate" required />
               </div>
 
               <div>
