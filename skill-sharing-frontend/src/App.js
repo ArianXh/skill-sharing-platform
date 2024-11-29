@@ -16,6 +16,7 @@ import Unauthorized from './pages/Unauthorized';
 import AdminRoute from './routes/AdminRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import CommunityPage from './pages/CommunityPage';
+import UserPublicProfilePage from './pages/UserPublicProfilePage'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Routes>
         <Route path="/" element={< HomePage />} />
         <Route path="/profile" element={<PrivateRoute element={< UserProfilePage />} />} />
+        <Route path='/:id/profile' element={< UserPublicProfilePage /> } />
         <Route path='/edit-profile' element={< EditProfile /> } />
         <Route path="/unauthorized" element={< Unauthorized />} />
         <Route path='/signup' element={< SignUpForm />} />

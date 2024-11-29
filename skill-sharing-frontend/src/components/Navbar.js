@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,8 +14,10 @@ const Navbar = () => {
         const fetchUserProfile = async () => {
             try {
                 const token = localStorage.getItem('token');
+                //const decodedToken = jwtDecode(token);
+                //const userId = decodedToken.user.id;
                 if (token) {
-                    const response = await axios.get('http://localhost:5000/api/users/profile', {
+                    const response = await axios.get(`http://localhost:5000/api/users/profile`, {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },

@@ -129,4 +129,30 @@ router.put('/profile', authMiddleware, async (req, res) => {
 });
 
 
+router.get('/:id/profile', async (req, res) => {
+    try {
+        console.log
+        const user = await User.findOne({
+            where: { id: req.params.id },
+            attributes: ['name', 'email', 'bio', 'experience', 'ratings_average'], // Public attributes
+            include: [{
+                model: Skills,
+                as: 'skills',
+                attributes: ['id', 'user_id', 'title', 'description', 'skill_level', 'popularity_score', 'hourly_rate'],
+            }],
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not foundsss' });
+        }
+
+        res.json(user);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching user profile' });
+    }
+});
+
+
+
 module.exports = router;

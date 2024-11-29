@@ -159,7 +159,7 @@ function UsersTab() {
                             <Link to={`/skills/${skill.id}`} className="block">
                                 <h3 className="text-xl font-bold text-gray-800">{skill.title}</h3>
                                 <p className="text-gray-600">{skill.description}</p>
-                                <p className="text-gray-800 font-semibold">Price: ${skill.price}</p>
+                                <p className="text-gray-800 font-semibold">Price: {skill.hourly_rate} credits / hour</p>
                                 <p className="text-gray-800 font-semibold">Skill Level: {skill.skill_level}</p>
                                 <p className="text-gray-800 font-semibold">Popularity Score: {skill.popularity_score}</p>
                             </Link>

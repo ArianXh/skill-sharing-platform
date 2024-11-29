@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';  // Import Navbar component
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
@@ -12,6 +12,7 @@ function SingleSkill() {
     const [message, setMessage] = useState('');
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+    const navigate = useNavigate();
     const token = localStorage.getItem('token'); 
 
     useEffect(() => {
@@ -75,6 +76,10 @@ function SingleSkill() {
         }
     };
 
+    const handleViewProfileClick = () => {
+        navigate(`/${skill.user_id}/profile`);
+    };
+
     if (loading) return <p className="text-center text-gray-500 mt-5">Loading...</p>;
     if (error) return <p className="text-center text-red-500 mt-5">Error: {error}</p>;
 
@@ -88,9 +93,19 @@ function SingleSkill() {
                 <div className="bg-white p-8 rounded-lg shadow-lg">
                     <h1 className="text-3xl font-bold text-gray-800">{skill.title}</h1>
                     <p className="text-lg text-gray-600 mt-4">{skill.description}</p>
+                    <p className="mt-2 text-black-500">Posted by: {skill.user.name} ({skill.user.email})</p>
+
+                     
+                    <button
+                        onClick={handleViewProfileClick}
+                        className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
+                    >
+                        View Profile
+                    </button>
+                    
+
                     <p className="mt-4 text-xl font-semibold text-gray-700">Price: {skill.hourly_rate} credits / hour</p>
                     <p className="mt-2 text-gray-500">Skill Level: {skill.skill_level}</p>
-                    <p className="mt-2 text-gray-500">Posted by: {skill.user.name} ({skill.user.email})</p>
                     <button
                         onClick={handlePurchase}
                         className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
