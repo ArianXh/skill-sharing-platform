@@ -1,9 +1,11 @@
 const express = require('express');
 const authMiddleware = require('../authMiddleware/authMiddleware');
-const Skills = require('../../models/Skills');
-const User = require('../../models/User');
-const Review = require('../../models/Review');
-const Categories = require('../../models/Categories');
+const Skills = require('..//models/Skills');
+const User = require('..//models/User');
+const Review = require('..//models/Review');
+const Categories = require('..//models/Categories');
+const Availability = require('..//models/Availability');
+const Session = require('..//models/Session');
 const router = express.Router();
 const Sequelize = require('sequelize');
 
@@ -127,6 +129,7 @@ router.delete('/skills/:id', authMiddleware, async (req, res) => {
       res.status(500).json({ error: 'An error occurred while deleting the skill.' });
   }
 });
+
 
 // Add a review to a skill (POST /api/skills/:id/review)
 router.post('/skills/:id/review', authMiddleware, async (req, res) => {

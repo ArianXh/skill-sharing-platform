@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./config/database');
-const { User, Skills, Review } = require('..//models/associations'); // Assuming the path is correct
+const { User, Skills, Review } = require('./models/associations'); // Assuming the path is correct
 const userRoutes = require('./routes/userRoutes');
 const skillRoutes = require('./routes/skillRoutes');
 const adminRoutes = require('./routes/adminRoutes');

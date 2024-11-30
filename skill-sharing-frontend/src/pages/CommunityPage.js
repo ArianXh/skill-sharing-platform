@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import CreatePost from '../components/CreatePost';
-import PostCard from '../components/PostCard';
+import CreatePost from '../components/community/CreatePost';
+import PostCard from '../components/community/PostCard';
 import Navbar from '../components/Navbar';
 
 const CommunityPage = () => {

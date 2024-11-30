@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const adminAuth = require('../authMiddleware/adminAuth');
-const User = require('../../models/User');
-const Skills = require('../../models/Skills');
-const Review = require('../../models/Review');
-const Categories = require('../../models/Categories');
-const Transactions = require('../../models/Transactions');
-const Post = require('../../models/Post');
-const Comment = require('../../models/Comment');
+const User = require('..//models/User');
+const Skills = require('..//models/Skills');
+const Review = require('..//models/Review');
+const Categories = require('..//models/Categories');
+const Transactions = require('..//models/Transactions');
+const Post = require('..//models/Post');
+const Comment = require('..//models/Comment');
 const Sequelize = require('sequelize');
 
 

@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const Skills = require('../../models/Skills');
-const User = require('../../models/User');
-const Transactions = require('../../models/Transactions');
+const Skills = require('..//models/Skills');
+const User = require('..//models/User');
+const Transactions = require('..//models/Transactions');
 const sequelize = require('../config/database'); // Path to your Sequelize instance
 
 

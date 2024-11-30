@@ -4,7 +4,7 @@ import Navbar from './Navbar';  // Import Navbar component
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
-function SingleSkill() {
+const SingleSkill = () => {
     const { id } = useParams();
     const [skill, setSkill] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -80,6 +80,10 @@ function SingleSkill() {
         navigate(`/${skill.user_id}/profile`);
     };
 
+    const handleBookSession = () => {
+        navigate(`/skills/${id}/book`);
+    };
+
     if (loading) return <p className="text-center text-gray-500 mt-5">Loading...</p>;
     if (error) return <p className="text-center text-red-500 mt-5">Error: {error}</p>;
 
@@ -111,6 +115,13 @@ function SingleSkill() {
                         className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
                     >
                         Purchase Skill
+                    </button>
+                    
+                    <button
+                        onClick={handleBookSession}
+                        className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
+                    >
+                        Book a Session
                     </button>
                     {message && <p className="mt-2 text-blue-500">{message}</p>}
 

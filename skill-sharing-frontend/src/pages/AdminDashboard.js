@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import UsersTab from '../components/UsersTab';
-import AnalyticsTab from '../components/AnalyticsTab';
-import PurchasesTab from '../components/PurchasesTab';
+import UsersTab from '../components/analytics/UsersTab';
+import AnalyticsTab from '../components/analytics/AnalyticsTab';
+import PurchasesTab from '../components/analytics/PurchasesTab';
 import Navbar from '../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,6 +71,7 @@ function AdminDashboard() {
           {activeTab === 'Users' && <UsersTab />}
           {activeTab === 'Analytics' && <AnalyticsTab />}
           {activeTab === 'Purchases' && <PurchasesTab />}
+          
         </main>
       </div>
     </div>
