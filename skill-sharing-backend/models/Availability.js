@@ -9,15 +9,6 @@ const Availability = sequelize.define('Availability', {
     primaryKey: true,
     autoIncrement: true,
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'id',
-    },
-    onDelete: 'CASCADE',
-  },
   skill_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
@@ -41,9 +32,7 @@ const Availability = sequelize.define('Availability', {
   },
 }, {
   tableName: 'availability',
-  timestamps: true, // Enables created_at and updated_at
-  createdAt: 'created_at', // Map createdAt to created_at
-  updatedAt: 'updated_at', // Map updatedAt to updated_at
+  timestamps: false, // Enables created_at and updated_at
 });
 
 module.exports = Availability;

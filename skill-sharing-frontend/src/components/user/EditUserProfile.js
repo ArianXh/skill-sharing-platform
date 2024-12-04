@@ -106,7 +106,7 @@ const EditProfile = () => {
         }
       );
       setSkills([...skills, response.data]);
-      setSkillData({ title: '', description: '', skill_level: '', hourly_rate: '' });
+      setSkillData({ title: '', description: '', skill_level: '', hourly_rate: ''});
       setMessage('Skill added successfully');
     } catch (err) {
       console.error('Error adding skill:', err);

@@ -1,12 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react';
+import Chart from 'chart.js/auto';
 
-const PerDay = () => {
+
+const PerDay = () => {  
     const [skillsAddedPerDay, setSkillsAddedPerDay] = useState([]);
     const [reviewsAddedPerDay, setReviewsAddedPerDay] = useState([]);
     const [transactionsMadePerDay, setTransactionsMadePerDay] = useState([]);
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+
+    // Chart refs
+    const reviewsChartRef = useRef(null);
+    const transactionsChartRef = useRef(null);
+    const skillsChartRef = useRef(null);
 
     useEffect(() => {
         const fetchPerDayAnalytics = async () => {
@@ -33,6 +40,11 @@ const PerDay = () => {
                 setSkillsAddedPerDay(skillsPerDayRes);
                 setReviewsAddedPerDay(reviewsPerDayRes);
                 setTransactionsMadePerDay(transactionsPerDayRes);
+
+                 // Initialize charts after data is loaded
+                createChart(reviewsChartRef.current, reviewsPerDayRes, 'Reviews Added Per Day');
+                createChart(transactionsChartRef.current, transactionsPerDayRes, 'Transactions Per Day');
+                createChart(skillsChartRef.current, skillsPerDayRes, 'Skills Added Per Day');
                 
             } catch (error) {
             if (error.response && error.response.status === 403) {
@@ -44,6 +56,37 @@ const PerDay = () => {
     }
     fetchPerDayAnalytics();
     }, []);
+
+
+    const createChart = (chartRef, data, label) => {
+        const dates = data.map((entry) => entry.date);
+        const counts = data.map((entry) => entry.count);
+    
+        new Chart(chartRef, {
+          type: 'bar',
+          data: {
+            labels: dates,
+            datasets: [
+              {
+                label,
+                data: counts,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: '#3b82f6',
+                fill: true,
+                tension: 0.4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: true,
+              },
+            },
+          },
+        });
+      };
 
     return (
         <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
@@ -59,6 +102,7 @@ const PerDay = () => {
                     </li>
                 ))}
                 </ul>
+                <canvas ref={reviewsChartRef}></canvas>
             </div>
 
             {/* Transactions Per Day */}
@@ -72,6 +116,7 @@ const PerDay = () => {
                     </li>
                 ))}
                 </ul>
+                <canvas ref={transactionsChartRef}></canvas>
             </div>
 
             {/* Skills Added Per Day */}
@@ -85,6 +130,7 @@ const PerDay = () => {
                     </li>
                 ))}
                 </ul>
+                <canvas ref={skillsChartRef}></canvas>
             </div>    
         </div>
     )

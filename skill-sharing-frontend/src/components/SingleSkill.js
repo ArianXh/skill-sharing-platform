@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';  // Import Navbar component
+import BookASession from './skills/BookASession';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 
@@ -12,6 +13,14 @@ const SingleSkill = () => {
     const [message, setMessage] = useState('');
     const [reviewText, setReviewText] = useState('');
     const [rating, setRating] = useState(0);
+
+
+     // dummy availability data
+    const availability = {
+        '2024-12-01': ['10:00 AM', '2:00 PM', '4:00 PM'],
+        '2024-12-03': ['9:00 AM', '1:00 PM'],
+    };
+    const [isBookingOpen, setIsBookingOpen] = useState(false);
     const navigate = useNavigate();
     const token = localStorage.getItem('token'); 
 
@@ -31,9 +40,26 @@ const SingleSkill = () => {
                 setLoading(false);
             }
         };
-        fetchSkill();
-    }, [id]);
 
+        /*const fetchAvailability = async () => {
+            try {
+                const response = await fetch(`http://localhost:5000/api/skills/skills/${id}/availability`);
+                if (!response.ok) {
+                  throw new Error(`Error: ${response.status} ${response.statusText}`);
+                }
+                const data = await response.json();
+                setAvailability(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };*/
+
+        fetchSkill();
+        //fetchAvailability();
+    }, [id]);
+    console.log(availability)
     // Handle Review Submission
     const handleAddReview = async (e) => {
         e.preventDefault();
@@ -76,13 +102,15 @@ const SingleSkill = () => {
         }
     };
 
+    const handleBookingConfirm = (date, slot, message) => {
+        console.log('Booking confirmed:', { date, slot, message });
+        setIsBookingOpen(false);
+    };
+
     const handleViewProfileClick = () => {
         navigate(`/${skill.user_id}/profile`);
     };
 
-    const handleBookSession = () => {
-        navigate(`/skills/${id}/book`);
-    };
 
     if (loading) return <p className="text-center text-gray-500 mt-5">Loading...</p>;
     if (error) return <p className="text-center text-red-500 mt-5">Error: {error}</p>;
@@ -109,7 +137,24 @@ const SingleSkill = () => {
                     
 
                     <p className="mt-4 text-xl font-semibold text-gray-700">Price: {skill.hourly_rate} credits / hour</p>
+
                     <p className="mt-2 text-gray-500">Skill Level: {skill.skill_level}</p>
+                    
+                     {/* Book a Session Button */}
+                    <button
+                        onClick={() => setIsBookingOpen(true)}
+                        className="px-4 py-2 mr-4 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
+                    >
+                        Book a Session
+                    </button>
+
+                    {/* Book a Session Modal */}
+                    <BookASession
+                        isOpen={isBookingOpen}
+                        onClose={() => setIsBookingOpen(false)}
+                        availability={availability}
+                        onConfirm={handleBookingConfirm}
+                    />
                     <button
                         onClick={handlePurchase}
                         className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
@@ -117,12 +162,7 @@ const SingleSkill = () => {
                         Purchase Skill
                     </button>
                     
-                    <button
-                        onClick={handleBookSession}
-                        className='px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none'
-                    >
-                        Book a Session
-                    </button>
+                    
                     {message && <p className="mt-2 text-blue-500">{message}</p>}
 
                     <div className="mt-6">

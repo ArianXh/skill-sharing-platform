@@ -20,6 +20,7 @@ const Marketplace = () => {
                 console.error('Error fetching skills:', error);
             }
         };
+
         fetchSkills();
     }, [category, skillLevel, search]);
     console.log(`Category: ${category}`)

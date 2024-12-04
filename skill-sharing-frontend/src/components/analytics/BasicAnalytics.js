@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
+import Chart from 'chart.js/auto';
 
 const BasicAnalytics = () => {
     const [analytics, setAnalytics] = useState({
@@ -13,6 +14,10 @@ const BasicAnalytics = () => {
 
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
+
+    // Ref for the Chart.js canvas
+    const chartRef = useRef(null);
+    const chartInstance = useRef(null); // To store Chart instance for cleanup
 
     useEffect(() => {
         const fetchBasicAnalytics = async () => {
@@ -40,52 +45,88 @@ const BasicAnalytics = () => {
     fetchBasicAnalytics();
     }, []);
 
+     // Render Chart.js
+    useEffect(() => {
+        if (chartRef.current) {
+        // Cleanup previous chart instance if it exists
+        if (chartInstance.current) {
+            chartInstance.current.destroy();
+        }
+
+        // Initialize new chart
+        chartInstance.current = new Chart(chartRef.current, {
+            type: 'bar', // Chart type
+            data: {
+            labels: [
+                'Users', 
+                'Skills', 
+                'Categories', 
+                'Reviews', 
+                'Posts', 
+                'Comments', 
+                'Transactions'
+            ],
+            datasets: [
+                {
+                label: 'Total Number',
+                data: [
+                    analytics.numberOfUsers, 
+                    analytics.numberOfSkills, 
+                    analytics.numberOfCategories, 
+                    analytics.numberOfReviews, 
+                    analytics.numberOfPosts, 
+                    analytics.numberOfComments, 
+                    analytics.numberOfTransactions
+                ],
+                backgroundColor: [
+                    '#1E3A8A', '#9333EA', '#059669', '#F59E0B', '#EF4444', '#3B82F6', '#10B981'
+                ],
+                borderColor: '#000',
+                borderWidth: 1,
+                },
+            ],
+            },
+            options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                display: true,
+                position: 'top',
+                },
+                tooltip: {
+                enabled: true,
+                },
+            },
+            scales: {
+                y: {
+                beginAtZero: true,
+                },
+            },
+            },
+        });
+        }
+    }, [analytics]); // Re-run whenever analytics data changes
+
 
   return (
     <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold text-gray-700">Basic Analytics</h1> 
-        {/* Number of Users */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Users</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfUsers}</p>
-        </div>
 
-        {/* Number of Skills */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Skills</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfSkills}</p>
-        </div>
+        {/* Analytics Metrics */}
+        {Object.entries(analytics).map(([key, value]) => (
+            <div key={key} className="bg-white shadow rounded-lg p-4">
+            <h2 className="text-lg font-semibold text-gray-600">
+                {key.replace(/numberOf/g, 'Total ')}
+            </h2>
+            <p className="text-2xl font-bold text-blue-500">{value}</p>
+            </div>
+        ))}
 
-        {/* Number of Categories */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Categories</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfCategories}</p>
+        {/* Chart.js Integration */}
+        <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-gray-600 mb-4">Analytics Overview</h2>
+            <canvas ref={chartRef} className="w-full h-64"></canvas>
         </div>
-
-        {/* Number of Reviews */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Reviews</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfReviews}</p>
-        </div>
-
-        {/* Number of Posts */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Posts</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfPosts}</p>
-        </div>
-
-        {/* Number of Comments */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Comments</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfComments}</p>
-        </div>
-
-        {/* Number of Transactions */}
-        <div className="bg-white shadow rounded-lg p-4">
-            <h2 className="text-lg font-semibold text-gray-600">Total Number of Transactions</h2>
-            <p className="text-2xl font-bold text-blue-500">{analytics.numberOfTransactions}</p>
-        </div>
-
     </div>
   )
 }

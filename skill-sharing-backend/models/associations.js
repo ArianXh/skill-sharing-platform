@@ -6,8 +6,7 @@ const Transactions = require('./Transactions');
 const Post = require('./Post');
 const Comment = require('./Comment');
 const Tag = require('./Tag'); 
-const Availability = require('./Availability'); 
-const Session = require('./Session'); 
+const Availability = require('./Availability');  
 
 // Define associations here
 User.hasMany(Skills, { foreignKey: 'user_id', as: 'skills' });
@@ -50,23 +49,12 @@ if (Tag) {
 
 
 /////////////////////////////// BOOKING SESSIONS /////////////////////////////// 
-User.hasMany(Availability, { foreignKey: 'user_id', as: 'availabilities' });
-Availability.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
-
-User.hasMany(Session, { foreignKey: 'buyer_id', as: 'purchasedSessions' });
-User.hasMany(Session, { foreignKey: 'seller_id', as: 'offeredSessions' });
-Session.belongsTo(User, { foreignKey: 'buyer_id', as: 'buyer' });
-Session.belongsTo(User, { foreignKey: 'seller_id', as: 'seller' });
-
 
 Skills.hasMany(Availability, { foreignKey: 'skill_id', as: 'availabilities' });
 Availability.belongsTo(Skills, { foreignKey: 'skill_id', as: 'skill' });
 
-Skills.hasMany(Session, { foreignKey: 'skill_id', as: 'sessions' });
-Session.belongsTo(Skills, { foreignKey: 'skill_id', as: 'skill' });
 
 
 
 
-
-module.exports = { User, Skills, Review, Categories, Post, Comment, Tag, Availability, Session };
+module.exports = { User, Skills, Review, Categories, Post, Comment, Tag, Availability };
