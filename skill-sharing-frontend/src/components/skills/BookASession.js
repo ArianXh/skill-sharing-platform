@@ -29,6 +29,7 @@ const BookASession = ({ isOpen, onClose, availability, onConfirm }) => {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-2">Select a Date:</h3>
               <Calendar onChange={setSelectedDate} value={selectedDate} />
+
             </div>
 
             {/* Time Slots */}

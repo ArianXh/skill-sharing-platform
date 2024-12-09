@@ -6,9 +6,7 @@ import SignUpForm from './components/user/SignUpForm';
 import LoginForm from './components/user/LoginForm';
 import './index.css';
 import EditProfile from './components/user/EditUserProfile';
-import Explore from './pages/Explore';
 import About from './pages/About';
-import Contact from './pages/Contact';
 import SkillsMarketplace from './pages/SkillsMarketplace';
 import SingleSkill from './components/SingleSkill';
 import PrivateRoute from './components/PrivateRoute';
@@ -31,9 +29,7 @@ function App() {
         <Route path='/marketplace' element={< SkillsMarketplace /> } />
         <Route path='/community' element={< CommunityPage /> } />
         <Route path='/login' element={< LoginForm />} />
-        <Route path='/explore' element={< Explore /> } />
         <Route path='/about' element={< About /> } />
-        <Route path='/contact' element={< Contact /> } />
         <Route path='/skills/:id' element={< SingleSkill /> } />
 
         {/* Admin Protected Routes */}

@@ -15,9 +15,15 @@ router.post('/', authMiddleware, async (req, res) => {
     try {
         const { title, content, tags } = req.body;
         const user_id = req.user.id; // Assuming authentication middleware provides req.user
-        console.log(`USER ID: ${user_id}`)
+        
+        //const user_name = req.user.name;
+
         const newPost = await Post.create({ user_id, title, content, tags });
-        res.status(201).json(newPost);
+    
+        newPost.User = req.user;
+        await newPost.save();
+
+        res.status(201).json();
     } catch (err) {
         res.status(500).json({ error: 'Failed to create post', details: err.message });
     }

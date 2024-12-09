@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const CreatePost = ({ onPostCreated }) => {
     const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState('');
 
@@ -22,13 +23,13 @@ const CreatePost = ({ onPostCreated }) => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
-                }
-            )
-                onPostCreated(response.data); // Notify parent of the new post
-                setTitle('');
-                setContent('');
-                setTags('');
-                }
+            })
+            
+            onPostCreated(response.data); // Notify parent of the new post
+            setTitle('');
+            setContent('');
+            setTags('');
+        }
          catch (err) {
             console.error('Error adding posts:', err);
             //setError('Failed to add post');

@@ -62,11 +62,9 @@ const Navbar = () => {
                         </div>
                         <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                             <Link to="/" className={getLinkClass('/')}>Home</Link>
-                            <Link to="/explore" className={getLinkClass('/explore')}>Explore</Link>
                             <Link to="/marketplace" className={getLinkClass('/marketplace')}>Marketplace</Link>
                             <Link to="/community" className={getLinkClass('/community')}>Community</Link>
                             <Link to="/about" className={getLinkClass('/about')}>About</Link>
-                            <Link to="/contact" className={getLinkClass('/contact')}>Contact</Link>
                         </div>
                     </div>
                     <div className="hidden sm:flex sm:items-center">

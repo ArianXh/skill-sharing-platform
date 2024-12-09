@@ -17,7 +17,7 @@ const Metrics = () => {
             try {
                 const token = localStorage.getItem('token'); // Adjust token retrieval as per your app's logic
     
-                const [growthRes, pricingRes, demandRes] = await Promise.all([
+                const [growthRes, pricingRes] = await Promise.all([
                     fetch("http://localhost:5000/api/admin/analytics/skills-growth", {
                         headers: {
                             Authorization: `Bearer ${token}`,
