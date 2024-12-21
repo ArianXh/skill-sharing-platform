@@ -8,7 +8,7 @@ const HomePage = () => {
             {/* Hero Section */}
             <header className="bg-blue-600 text-white py-20">
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <h1 className="text-5xl font-bold mb-4">Welcome to SkillShare Hub</h1>
+                    <h1 className="text-5xl font-bold mb-4">Welcome to SkillSphere</h1>
                     <p className="text-xl mb-8">
                         Share your skills with the world, learn from others, and grow your expertise.
                     </p>
@@ -58,17 +58,17 @@ const HomePage = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div className="p-6 bg-gray-100 shadow-md rounded-lg">
                             <p className="text-gray-600 mb-4">
-                                "SkillShare Hub has helped me grow my business by connecting me with clients who need my
+                                "SkillSphere has helped me grow my business by connecting me with clients who need my
                                 expertise. It's a fantastic platform!"
                             </p>
                             <h4 className="text-xl font-semibold">John Doe</h4>
                         </div>
                         <div className="p-6 bg-gray-100 shadow-md rounded-lg">
                             <p className="text-gray-600 mb-4">
-                                "I've learned so much from the experts on SkillShare Hub. The community is supportive,
+                                "I've learned so much from the experts on SkillSphere. The community is supportive,
                                 and I've made great connections."
                             </p>
-                            <h4 className="text-xl font-semibold">Jane Smith</h4>
+                            <h4 className="text-xl font-semibold">Veton Xhumkar</h4>
                         </div>
                         <div className="p-6 bg-gray-100 shadow-md rounded-lg">
                             <p className="text-gray-600 mb-4">
@@ -101,7 +101,7 @@ const HomePage = () => {
             {/* Footer */}
             <footer className="bg-gray-800 text-white py-8">
                 <div className="max-w-7xl mx-auto px-4 text-center">
-                    <p className="text-gray-400">&copy; 2024 SkillShare Hub. All rights reserved.</p>
+                    <p className="text-gray-400">&copy; 2024 SkillSphere. All rights reserved.</p>
                 </div>
             </footer>
         </div>

@@ -112,6 +112,11 @@ const BasicAnalytics = () => {
     <div className="p-6 space-y-6 bg-gray-100 min-h-screen">
         <h1 className="text-2xl font-bold text-gray-700">Basic Analytics</h1> 
 
+        {/* Chart.js Integration */}
+        <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-gray-600 mb-4">Analytics Overview</h2>
+            <canvas ref={chartRef} className="w-full h-64"></canvas>
+        </div>
         {/* Analytics Metrics */}
         {Object.entries(analytics).map(([key, value]) => (
             <div key={key} className="bg-white shadow rounded-lg p-4">
@@ -122,11 +127,7 @@ const BasicAnalytics = () => {
             </div>
         ))}
 
-        {/* Chart.js Integration */}
-        <div className="bg-white shadow rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-600 mb-4">Analytics Overview</h2>
-            <canvas ref={chartRef} className="w-full h-64"></canvas>
-        </div>
+        
     </div>
   )
 }
