@@ -5,7 +5,7 @@ import SkillDetails from './skills/SkillDetails';
 import Reviews from './skills/Reviews';
 import AddReview from './skills/AddReview';
 import Modal from './skills/Modal';
-import axios from 'axios';
+import axios, { formToJSON } from 'axios';
 
 
 const SingleSkill = () => {
@@ -37,7 +37,7 @@ const SingleSkill = () => {
     fetchSkill();
   }, [id]);
 
-
+  
   const handleAddReview = async (e) => {
     e.preventDefault();
     try {
@@ -69,7 +69,7 @@ const SingleSkill = () => {
     <div className="min-h-screen bg-gray-100">
       <Navbar />
       <div className="container mx-auto p-6">
-        <SkillDetails skill={skill} handleViewProfileClick={handleViewProfileClick} />
+        <SkillDetails skill={skill} availabilities={skill.availabilities} handleViewProfileClick={handleViewProfileClick} />
         <Reviews reviews={skill.reviews} />
         <button
           onClick={() => setIsModalOpen(true)}

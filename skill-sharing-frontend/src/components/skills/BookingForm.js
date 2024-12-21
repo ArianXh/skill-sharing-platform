@@ -1,11 +1,27 @@
 import React, { useState } from 'react';
 
-const BookingForm = ({ hourlyRate, onSubmit }) => {
+const BookingForm = ({ hourlyRate, onClose, onSubmit }) => {
     const [duration, setDuration] = useState(1); // Default duration (1 hour)
-
-    const handleSubmit = (e) => {
+    
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(duration); // Pass the duration to the parent handler
+        
+    try {
+        // Attempt to submit the booking
+        const response = await onSubmit(duration);
+
+        if (response) {
+            alert('Booking successful!');
+        } else {
+            alert('Booking failed. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error submitting booking:', error);
+        alert('An unexpected error occurred. Please try again later.');
+    } finally {
+        // Close the modal regardless of the outcome
+        onClose();
+    }
     };
 
     return (

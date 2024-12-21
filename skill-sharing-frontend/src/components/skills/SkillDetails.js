@@ -6,29 +6,17 @@ import Modal from './Modal';
 import BookingForm from './BookingForm';
 
 
-const SkillDetails = ({ skill, handleViewProfileClick }) => {
+const SkillDetails = ({ skill, availabilities, handleViewProfileClick }) => {
     const { id } = useParams();
     const [message, setMessage] = useState('');
-    const [isBookingModalOpen, setBookingModalOpen] = useState(false); // Booking Modal State
+    const [isBookingModalOpen, setBookingModalOpen] = useState(false); 
 
-    const handleBookingSubmit = async (duration) => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(
-                'http://localhost:5000/api/transactions',
-                { skillId: id, duration },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            alert('Booking successful!');
-            setBookingModalOpen(false); // Close the modal after booking
-        } catch (error) {
-            console.error('Booking failed:', error);
-            alert('An error occurred during booking.');
-        }
+    const handleOpenModal = () => {
+        setBookingModalOpen(true);
+    };
+    
+    const handleCloseModal = () => {
+        setBookingModalOpen(false);
     };
 
     const handlePurchase = async (duration) => {
@@ -47,11 +35,14 @@ const SkillDetails = ({ skill, handleViewProfileClick }) => {
             );
             setMessage('Purchase successful!');
             console.log('Transaction successful:', response.data);
+            return true; // indicates success
         } catch (error) {
             setMessage(error.response?.data?.error || 'An error occurred during the purchase.');
+            console.error('Booking failed', error);
+            return false;
         }
     };
-
+    
     return (
         <div className="bg-white p-8 rounded-lg shadow-lg">
             <h1 className="text-3xl font-bold text-gray-800">{skill.title}</h1>
@@ -59,6 +50,7 @@ const SkillDetails = ({ skill, handleViewProfileClick }) => {
             <p className="mt-2 text-black-500">
                 Posted by: {skill.user.name} ({skill.user.email})
             </p>
+
 
             <button
                 onClick={handleViewProfileClick}
@@ -68,13 +60,40 @@ const SkillDetails = ({ skill, handleViewProfileClick }) => {
             </button>
 
             <p className="mt-4 text-xl font-semibold text-gray-700">
-                Price: {skill.hourly_rate} credits / hour
+                Price:
             </p>
 
-            <p className="mt-2 text-gray-500">Skill Level: {skill.skill_level}</p>
+            <p className="mt-2 text-gray-500">
+                {skill.hourly_rate} credits / hour
+            </p>
+
+            
+           
+            <p className="mt-4 text-xl font-semibold text-gray-700">
+                Skill Level:
+            </p>
+            <p className="mt-2 text-gray-500">{skill.skill_level}</p>
+
+            <h3 className="mt-4 text-xl font-semibold text-gray-700 ">Availabilities:</h3>
+            {availabilities.length > 0 ? (
+                availabilities.map((availability) => (
+                <div key={availability.id} className="border-b border-gray-300 py-4">
+                    <p>
+                    <strong>{availability.day_of_week}</strong>
+                    </p>
+                    <p>Start Time: {availability.start_time}</p>
+                    <p>End Time: {availability.end_time}</p>
+
+                </div>
+                ))
+            ) : (
+                <p>No availability yet.</p>
+            )}
+
+
             <button
                 onClick={() => setBookingModalOpen(true)} // Open the modal
-                className="mt-4 px-4 py-2 bg-indigo-500 text-white rounded"
+                className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
             >
                 Book a Session
             </button>
@@ -86,6 +105,7 @@ const SkillDetails = ({ skill, handleViewProfileClick }) => {
             >
                 <BookingForm
                     hourlyRate={skill.hourly_rate}
+                    onClose={handleCloseModal}
                     onSubmit={handlePurchase}
                 />
             </Modal>

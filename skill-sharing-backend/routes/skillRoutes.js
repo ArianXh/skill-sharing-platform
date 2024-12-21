@@ -50,7 +50,12 @@ router.get('/skills/:id', async (req, res) => {
                     model: Review,
                     as: 'reviews',  // Alias should match the model association
                     include: [{ model: User, as: 'user', attributes: ['name'] }],
-                }
+                },
+                {
+                  model: Availability,
+                  as: 'availabilities',  // Alias should match the model association
+                  attributes: ['skill_id', 'day_of_week', 'start_time', 'end_time']
+              }
             ]
         });
         if (!skill) {
@@ -71,15 +76,7 @@ router.post('/create', authMiddleware, async (req, res) => {
     try {
 
         // Ensure category_id exists
-        const category = await Categories.findByPk(category_id, {
-          include: [
-            {
-                model: Availability,
-                as: 'availabilities',  // Alias should match the model association
-                attributes: ['skill_id', 'day_of_week', 'start_time', 'end_time']
-            },
-        ]
-        });
+        const category = await Categories.findByPk(category_id, {});
         if (!category){
             return res.status(400).json({ error: 'Invalid category' });
         }
@@ -93,6 +90,9 @@ router.post('/create', authMiddleware, async (req, res) => {
             user_id: userId,
             category_id,
             hourly_rate,
+            //day_of_week,
+            //start_time,
+            //end_time
         });
         console.log(`NEW SKILL: ${newSkill}`);
         res.status(201).json(newSkill);
@@ -153,7 +153,7 @@ router.get('/skills/:id/availability', async (req, res) => {
           return res.status(404).json({ message: 'No availability found for the specified skill.' });
       }
 
-      res.status(200).json({ skill_id: id, availability });
+      res.status(200).json(availability);
   } catch (error) {
       console.error('Error fetching availability:', error);
       res.status(500).json({ message: 'Internal server error' });
@@ -165,7 +165,7 @@ router.get('/skills/availability', async (req, res) => {
   try {
       // Fetch availability for the given skill ID
       const availability = await Availability.findAll({
-        attributes: ['day_of_week', 'start_time', 'end_time'],
+        attributes: ['skill_id','day_of_week', 'start_time', 'end_time'],
       });
 
       // Return availability
