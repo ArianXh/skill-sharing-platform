@@ -54,7 +54,4 @@ Skills.hasMany(Availability, { foreignKey: 'skill_id', as: 'availabilities' });
 Availability.belongsTo(Skills, { foreignKey: 'skill_id', as: 'skill' });
 
 
-
-
-
 module.exports = { User, Skills, Review, Categories, Post, Comment, Tag, Availability };

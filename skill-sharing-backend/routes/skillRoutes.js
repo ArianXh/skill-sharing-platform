@@ -9,7 +9,6 @@ const router = express.Router();
 const Sequelize = require('sequelize');
 
 
-
 // Fetch ALL skills with filters
 router.get('/skills', async (req, res) => {
     const { category, skill_level, search } = req.query;
@@ -43,17 +42,17 @@ router.get('/skills/:id', async (req, res) => {
             include: [
                 {
                     model: User,
-                    as: 'user',  // Alias should match the model association
+                    as: 'user', 
                     attributes: ['id', 'name', 'email']
                 },
                 {
                     model: Review,
-                    as: 'reviews',  // Alias should match the model association
+                    as: 'reviews', 
                     include: [{ model: User, as: 'user', attributes: ['name'] }],
                 },
                 {
                   model: Availability,
-                  as: 'availabilities',  // Alias should match the model association
+                  as: 'availabilities', 
                   attributes: ['skill_id', 'day_of_week', 'start_time', 'end_time']
               }
             ]
@@ -90,11 +89,7 @@ router.post('/create', authMiddleware, async (req, res) => {
             user_id: userId,
             category_id,
             hourly_rate,
-            //day_of_week,
-            //start_time,
-            //end_time
         });
-        console.log(`NEW SKILL: ${newSkill}`);
         res.status(201).json(newSkill);
     } catch (error) {
         console.error('Error creating skill:', error);
@@ -199,7 +194,7 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
         return res.status(404).json({ error: 'Skill not found' });
       }
       
-      // Prevent buyer from purchasing their own skill
+      // Prevent owner of the skill reviewing or rating their own skill
       if (userId === skill.user_id) {
         return res.status(400).json({ error: 'You cannot rate or review your own skill.' });
     }
@@ -212,9 +207,6 @@ router.post('/skills/:id/review', authMiddleware, async (req, res) => {
         skill_id: skillId,
         user_id: userId,
       });
-
-      // Call the updateRatingsAverage function
-
   
       res.status(201).json(newReview);
     } catch (error) {

@@ -46,6 +46,7 @@ function PurchasesTab() {
                             <th className="px-6 py-3 text-left border-b">Seller</th>
                             <th className="px-6 py-3 text-left border-b">Skill</th>
                             <th className="px-6 py-3 text-left border-b">Amount</th>
+                            <th className="px-6 py-3 text-left border-b">Duration</th>
                             <th className="px-6 py-3 text-left border-b">Date</th>
                         </tr>
                     </thead>
@@ -66,6 +67,8 @@ function PurchasesTab() {
                                 </td>
                                 <td className="px-6 py-4 border-b">{transaction.skill.title}</td>
                                 <td className="px-6 py-4 border-b font-semibold">{transaction.amount} credits</td>
+                                <td className="px-6 py-4 border-b font-semibold">{transaction.duration} hrs</td>
+
                                 <td className="px-6 py-4 border-b">
                                     {new Date(transaction.created_at).toLocaleString()}
                                 </td>

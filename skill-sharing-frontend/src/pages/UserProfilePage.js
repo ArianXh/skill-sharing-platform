@@ -65,13 +65,7 @@ const UserProfilePage = () => {
                 </div>
                 <nav className="space-y-4">
                     <button className="block w-full text-left py-2 px-4 rounded-md hover:bg-blue-700">
-                        Overview
-                    </button>
-                    <button className="block w-full text-left py-2 px-4 rounded-md hover:bg-blue-700">
                         Skills
-                    </button>
-                    <button className="block w-full text-left py-2 px-4 rounded-md hover:bg-blue-700">
-                        Testimonials
                     </button>
                     <button className="block w-full text-left py-2 px-4 rounded-md hover:bg-blue-700">
                         Payments

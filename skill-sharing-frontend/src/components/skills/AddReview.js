@@ -34,12 +34,15 @@ const AddReview = ({
                 </option>
               ))}
             </select>
-            <button
-              type="submit"
-              className="px-4 py-2 mt-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-400 focus:outline-none"
-            >
-              Submit Review
-            </button>
+
+            <div className="mt-4 flex justify-center gap-2">
+              <button
+                type="submit"
+                className="px-4 py-2 mt-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-400 focus:outline-none"
+              >
+                Submit Review
+              </button>
+            </div>
           </form>
           {message && <p className="mt-2 text-blue-500">{message}</p>}
         </>

@@ -74,7 +74,7 @@ const SkillDetails = ({ skill, availabilities, handleViewProfileClick }) => {
             </p>
             <p className="mt-2 text-gray-500">{skill.skill_level}</p>
 
-            <h3 className="mt-4 text-xl font-semibold text-gray-700 ">Availabilities:</h3>
+            <h3 className="mt-4 text-xl font-semibold text-gray-700 border-b-2 border-gray-600">Availabilities:</h3>
             {availabilities.length > 0 ? (
                 availabilities.map((availability) => (
                 <div key={availability.id} className="border-b border-gray-300 py-4">
@@ -93,7 +93,7 @@ const SkillDetails = ({ skill, availabilities, handleViewProfileClick }) => {
 
             <button
                 onClick={() => setBookingModalOpen(true)} // Open the modal
-                className="px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
+                className="mt-4 px-4 py-2 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-400 focus:outline-none"
             >
                 Book a Session
             </button>
@@ -107,6 +107,7 @@ const SkillDetails = ({ skill, availabilities, handleViewProfileClick }) => {
                     hourlyRate={skill.hourly_rate}
                     onClose={handleCloseModal}
                     onSubmit={handlePurchase}
+                    availabilities={availabilities}
                 />
             </Modal>
         </div>

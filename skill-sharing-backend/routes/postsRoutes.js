@@ -14,10 +14,8 @@ const router = express.Router();
 router.post('/', authMiddleware, async (req, res) => {
     try {
         const { title, content, tags } = req.body;
-        const user_id = req.user.id; // Assuming authentication middleware provides req.user
+        const user_id = req.user.id; // Assuming authentication middleware provides req.user (GOTTA BE LOGGED IN!)
         
-        //const user_name = req.user.name;
-
         const newPost = await Post.create({ user_id, title, content, tags });
     
         newPost.User = req.user;

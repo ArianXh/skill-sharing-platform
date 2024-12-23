@@ -12,8 +12,6 @@ router.post('/:post_id', authMiddleware, async (req, res) => {
         const { content } = req.body;
         const { post_id } = req.params;
         const user_id = req.user.id; // Assuming authentication middleware provides req.user (GOTTA BE LOGGED IN!)
-        console.log(`PostID: ${post_id} UserID: ${user_id}`);
-        console.log(`PostID: ${post_id}, UserID: ${user_id}, Content: ${content}`);
         const newComment = await Comment.create({ post_id, user_id, content });
         res.status(201).json(newComment);
     } catch (err) {

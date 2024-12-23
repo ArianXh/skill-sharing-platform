@@ -3,16 +3,13 @@ const router = express.Router();
 const Skills = require('..//models/Skills');
 const User = require('..//models/User');
 const Transactions = require('..//models/Transactions');
-const sequelize = require('../config/database'); // Path to your Sequelize instance
+const sequelize = require('../config/database');
+const authMiddleware = require('../authMiddleware/authMiddleware');
 
 
-router.post('/', async (req, res) => {
+router.post('/', authMiddleware, async (req, res) => {
     const { buyerId, skillId, duration } = req.body;
-    //const { skillId, duration } = req.body;
-    console.log(`BuyerID: ${buyerId}`)
-    console.log(`SkillID: ${skillId}`);
-    console.log(`Durotation: ${duration}`);
-
+    
     try {
         // BUYER
         const buyer = await User.findByPk(buyerId);
@@ -66,6 +63,7 @@ router.post('/', async (req, res) => {
                     seller_id: sellerId,
                     skill_id: skillId,
                     amount: Math.round(totalCost),
+                    duration: duration
                 },
                 { transaction: t }
             );
@@ -79,27 +77,6 @@ router.post('/', async (req, res) => {
         return res.status(500).json({ error: 'Internal server error.' });
     }
 });
-
-/*
-router.post('/', async (req, res) => {
-    const { skillId, duration } = req.body;
-    const { userId } = req.user; // Extract from token
-    try {
-        const skill = await Skills.findByPk(skillId);
-        if (!skill) return res.status(404).send({ error: 'Skill not found' });
-
-        const totalCost = skill.hourly_rate * duration;
-
-        // Logic to handle credits and booking records
-        // e.g., deduct credits from the buyer and create a booking record
-
-        return res.status(201).send({ message: 'Booking successful!' });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).send({ error: 'Internal server error' });
-    }
-});
-*/
 
 
 module.exports = router;

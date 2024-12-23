@@ -9,12 +9,13 @@ const Transactions = require('..//models/Transactions');
 const Post = require('..//models/Post');
 const Comment = require('..//models/Comment');
 const Sequelize = require('sequelize');
+const Availability = require('../models/Availability');
 
 
 // 1. Get all users (View users in the admin dashboard)
 router.get('/users', adminAuth, async (req, res) => {
     try {
-        const users = await User.findAll(); // Fetch all users from the database
+        const users = await User.findAll(); 
         res.json(users);
     } catch (error) {
         res.status(500).json({ error: 'Failed to retrieve users.' });
@@ -52,9 +53,9 @@ router.put('/user/:id', adminAuth, async (req, res) => {
     try {
         const user = await User.findByPk(id);
         if (user) {
-            user.role = role || user.role;  // Update user role
-            user.status = status || user.status; // Update user status
-            await user.save(); // Save the updated user
+            user.role = role || user.role;  
+            user.status = status || user.status; 
+            await user.save(); 
             res.json(user);
         } else {
             res.status(404).json({ error: 'User not found.' });
@@ -86,25 +87,12 @@ router.delete('/user/:id', adminAuth, async (req, res) => {
 router.get('/basic-analytics', adminAuth, async (req, res) => {
     try {
       const numberOfUsers = await User.count();
-      console.log(`Number of users: ${numberOfUsers}`);
-
       const numberOfSkills = await Skills.count();
-      console.log(`Number of skills: ${numberOfSkills}`);
-
       const numberOfCategories = await Categories.count();
-      console.log(`Number of categories: ${numberOfCategories}`);
-
       const numberOfReviews = await Review.count();
-      console.log(`Number of reviews: ${numberOfReviews}`);
-
       const numberOfPosts = await Post.count();
-      console.log(`Number of posts: ${numberOfPosts}`);
-
       const numberOfComments = await Comment.count();
-      console.log(`Number of comments: ${numberOfComments}`);
-
       const numberOfTransactions = await Transactions.count();
-      console.log(`Number of transactions: ${numberOfTransactions}`);
       
       res.json({
         numberOfUsers,
@@ -127,16 +115,16 @@ router.get('/analytics/skills-by-category', adminAuth, async (req, res) => {
       const skillsByCategory = await Skills.findAll({
           attributes: [
               'category_id',
-              [Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'count'], // Count the number of skills
+              [Sequelize.fn('COUNT', Sequelize.col('Skills.id')), 'count'], 
           ],
           include: [
               {
                   model: Categories,
-                  as: 'categories', // Alias matches association
-                  attributes: ['id', 'name'], // Fetch category id & name
+                  as: 'categories', 
+                  attributes: ['id', 'name'], 
               },
           ],
-          group: ['Skills.category_id', 'categories.id', 'categories.name'], // Group by category_id and category name
+          group: ['Skills.category_id', 'categories.id', 'categories.name'], 
       });
 
       res.json(skillsByCategory);
@@ -218,7 +206,7 @@ router.get('/analytics/top-skill-categories', adminAuth, async (req, res) => {
       });
       res.json(topSkillCategories);
   } catch (error) {
-      console.error('Error in /analytics/top-skill-categories:', error); // Log details
+      console.error('Error in /analytics/top-skill-categories:', error); 
       res.status(500).json({ error: 'Failed to retrieve top skill categories.', details: error.message });
   }
 });
@@ -238,7 +226,7 @@ router.get('/analytics/skills-growth', adminAuth, async (req, res) => {
       });
       res.json(skillsGrowth);
   } catch (error) {
-      console.error('Error in /analytics/skills-growth:', error); // Log full error
+      console.error('Error in /analytics/skills-growth:', error); 
       res.status(500).json({ error: error.message || 'Failed to retrieve skills growth.' });
   }
 });
@@ -255,7 +243,7 @@ router.get('/analytics/skill-pricing-trends', adminAuth, async (req, res) => {
       include: [
           { model: Categories, as: 'categories', attributes: ['id', 'name'] }
       ],
-      group: ['Skills.category_id', 'categories.id', 'categories.name'], // Include 'categories.name'
+      group: ['Skills.category_id', 'categories.id', 'categories.name'], 
     });
       res.json(pricingTrends);
   } catch (error) {
@@ -269,25 +257,25 @@ router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
   try {
     const topDemandSkills = await Transactions.findAll({
       attributes: [
-        'skill_id', // Include the skill_id for grouping
-        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'skill_count'] // Count transactions for each skill
+        'skill_id', 
+        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'skill_count'] 
       ],
       include: [
         {
           model: Skills,
-          as: 'skill', // Use the alias defined in your associations
-          attributes: ['id', 'title'] // Include skill details like id and title
+          as: 'skill',
+          attributes: ['id', 'title'] 
         }
       ],
-      group: ['skill_id', 'skill.id', 'skill.title'], // Group by skill_id and skill.title
+      group: ['skill_id', 'skill.id', 'skill.title'], 
       order: [
-        [Sequelize.col('skill.title'), 'DESC'], // Order by skill title alphabetically
-        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'ASC'] // Secondary order by transaction count
+        [Sequelize.col('skill.title'), 'DESC'], 
+        [Sequelize.fn('COUNT', Sequelize.col('Transactions.id')), 'ASC'] 
       ],
-      limit: 10 // Limit to top 10 results
+      limit: 10 
     });
 
-    res.json(topDemandSkills); // Return the result as JSON
+    res.json(topDemandSkills); 
   } catch (error) {
     console.error('Error fetching top-demand skills:', error);
     res.status(500).json({ error: 'Failed to retrieve top-demand skills.' });
@@ -297,14 +285,13 @@ router.get('/analytics/top-demand-skills', adminAuth, async (req, res) => {
 
 
 // 3. Get all TRANSACTIONS on the platform
-// Get all transactions
 router.get('/transactions', adminAuth, async (req, res) => {
   try {
     const transactions = await Transactions.findAll({
       include: [
           { model: User, as: 'buyer', attributes: ['id', 'name', 'email'] },
           { model: User, as: 'seller', attributes: ['id', 'name', 'email'] },
-          { model: Skills, as: 'skill', attributes: ['id', 'title', 'hourly_rate'] }, 
+          { model: Skills, as: 'skill', attributes: ['id', 'title', 'hourly_rate'] },
       ],
       order: [['created_at', 'DESC']], // Sort by most recent transactions
   });

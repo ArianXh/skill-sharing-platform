@@ -11,7 +11,6 @@ const adminAuth = (req, res, next) => {
 
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-    //console.log('ROLEEE: ', decodedToken.user.role)
     // Check if user has admin role
     if (decodedToken.user.role !== 'admin') {
       return res.status(403).json({ error: 'Access denied. Admin privileges are required.' });

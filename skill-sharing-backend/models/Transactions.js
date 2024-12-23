@@ -34,6 +34,10 @@ const Transactions = sequelize.define('Transactions', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  duration: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   
 }, {
   sequelize,
