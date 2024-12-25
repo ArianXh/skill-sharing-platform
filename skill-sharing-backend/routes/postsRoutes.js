@@ -19,7 +19,7 @@ router.post('/', authMiddleware, async (req, res) => {
         const newPost = await Post.create({ user_id, title, content, tags });
     
         newPost.User = req.user;
-        await newPost.save();
+        newPost.save();
 
         res.status(201).json();
     } catch (err) {

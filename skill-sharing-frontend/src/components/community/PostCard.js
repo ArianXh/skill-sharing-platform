@@ -6,6 +6,8 @@ const PostCard = ({ post }) => {
     const toggleComments = () => {
         setShowComments(!showComments);
     };
+
+    console.log(`Post: ${JSON.stringify(post)}`)
     return (
         <div className="bg-white shadow-lg rounded-lg p-6 mb-6 border border-gray-200">
             <h2 className="text-xl font-bold text-gray-800 mb-2">{post.title}</h2>

@@ -39,7 +39,7 @@ router.post('/', authMiddleware, async (req, res) => {
         const totalCost = skill.hourly_rate * duration
 
         // Check if buyer has enough credits
-        if (buyer.credits < totalCost) {
+        if (buyer.credits <= totalCost) {
             return res.status(400).json({ error: 'Insufficient credits to purchase this skill.' });
         }
 

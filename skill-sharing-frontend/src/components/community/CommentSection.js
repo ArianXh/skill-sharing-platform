@@ -27,11 +27,13 @@ const CommentSection = ({ postId }) => {
         );
             setComments([...comments, response.data]); // Add new comment
             setNewComment('');
+            console.log(`Response data: ${JSON.stringify(response.data)}`)
         } catch (err) {
             console.error('Error adding skill:', err);
             //setError('Failed to add skill');
           }
     };
+    console.log(`Comments: ${JSON.stringify(comments)}`)
     return (
         <div className="bg-gray-100 p-4 rounded-lg mt-4">
             <h3 className="text-lg font-semibold mb-3">Comments</h3>
